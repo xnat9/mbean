@@ -1,0 +1,74 @@
+buildscript {
+    ext {
+        springBootVersion = '1.5.2.RELEASE'
+    }
+    repositories {
+        mavenLocal()
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+//apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+
+//sourceSets.main.java.srcDirs = ['src']
+//sourceSets.main.resources.srcDirs = sourceSets.main.java.srcDirs
+
+springBoot {
+  mainClass = "my.mbean.Application"
+}
+
+
+jar {
+    baseName = 'mbean'
+    version = 'mbean.jar'
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Quickstart',
+                   'Implementation-Version': version
+    }
+    processResources {
+        from('src/main/java') {
+            include '**/*'
+        }
+    }
+}
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+
+repositories {
+    mavenLocal()
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+    compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    // compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    
+        // add jsp support.
+    // runtime('tomcat:tomcat-embed-jasper')
+    // runtime("org.apache.tomcat.embed:tomcat-embed-jasper")
+    // compile('javax.servlet:jstl')
+}
+
+test {
+    systemProperties 'property': 'value'
+}
+
+uploadArchives {
+    repositories {
+       flatDir {
+           dirs 'repos'
+       }
+    }
+}

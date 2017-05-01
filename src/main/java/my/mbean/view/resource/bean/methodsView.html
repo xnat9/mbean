@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!-- methods view area -->
+<div th:fragment="methodsView" class="container-fluid" th:if="${not #lists.isEmpty(methods)}">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>Method View</h3>
+        </div>
+        <table class="table table-bordered table-condensed table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Return Type</th>
+                    <th>Declaring Class</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="methodEntry : ${methods}">
+                    <td th:switch="${methodEntry.value.callable}">
+                        <a th:case="true" th:text="${methodEntry.key}" th:href="${methodEntry.value.url}"></a>
+                        <span th:case="false" th:text="${methodEntry.key}"></span>
+                    </td>
+                    <td th:text="${methodEntry.value.returnType}"></td>
+                    <td th:text="${methodEntry.value.declaringClass}"></td>
+                </tr>
+            </tbody>
+            <tfoot>
+            </tfoot>
+        </table>
+    </div>
+</div>

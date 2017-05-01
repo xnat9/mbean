@@ -1,0 +1,35 @@
+<div :title="value.tip">
+  <!-- map value-->
+  <ol v-if="value.value && value.type == 'map'">
+    <li v-for="entry in value.value">
+      <div>
+        <i>key:</i>
+        <a v-if="entry.key.ref" :href="entry.key.beanUrl">{{entry.key.beanName}}</a>
+        <span v-else>{{entry.key.toString}}</span>
+      </div>
+      <div>
+        <i>value:</i>
+        <a v-if="entry.value.ref" :href="entry.value.beanUrl">{{entry.value.beanName}}</a>
+        <span v-else>{{entry.value.toString}}</span>
+      </div>
+    </li>
+  </ol>
+
+  <!-- list or array value-->
+  <ol v-else-if="value.value && (value.type == 'list' || value.type == 'array')">
+    <li v-for="item in value.value">
+      <a v-if="item.ref" :href="item.beanUrl">{{item.beanName}}</a>
+      <span v-else>{{item.toString}}</span>
+    </li>
+  </ol>
+
+  <!-- bean reference value-->
+  <a v-else-if="value.beanRef && value.beanRef.ref" :href="value.beanRef.beanUrl">{{value.beanRef.beanName}}</a>
+
+  <!-- number or boolean origin value -->
+  <!-- note: 当boolean 值为false的时候不会不这里-->
+  <span v-else-if="value.type == 'simple'">{{value.originValue}}</span>
+
+  <!-- value toString-->
+  <span v-else>{{value.toString}}</span>
+</div>

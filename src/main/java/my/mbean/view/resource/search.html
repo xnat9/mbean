@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>${title}</title>
+    <link rel="stylesheet" type="text/css" href="${staticUrlPrefix}/css/bootstrap.min.css"/>
+</head>
+<body class="container">
+
+<div></div>
+
+<div id="beansContainer" class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>Search Beans List</h3>
+            <p></p>
+        </div>
+        <ul class="list-group">
+            <li v-for="bean in beans" class="list-group-item"><a :href="bean.url">{{bean.name}}</a></li>
+        </ul>
+    </div>
+</div>
+
+<script src="${staticUrlPrefix}/js/vue.js"></script>
+<!-- <script src="${staticUrlPrefix}/js/jquery-3.1.1.min.js"></script> -->
+<!-- <script src="static/resource/js/jquery.form.js"></script> -->
+<script type="text/javascript">
+var beans = ${beans};
+
+
+
+</script>
+<!-- <script src="${staticUrlPrefix}/js/search.js"></script> -->
+<script type="text/javascript">
+var testData = {
+        beans: [
+        ]
+    };
+
+var app = new Vue({
+    el : '#beansContainer',
+    data : function() {
+        if (beans) {
+            return {
+                'beans': beans
+            }
+        } else {
+            return testData;
+        }
+    },
+    components: {
+        'Beanitem': {
+            props: ['bean'],
+            template: '#bean-item-template'
+        }
+    },
+    methods: {
+        search: function() {
+            var self = this;
+            $.post({
+                url: window.location.href,
+                dataType: 'json',
+                success: function(resp) {
+                    //console.log("resp: ", resp);
+                    if (resp && resp.result && resp.result.beans) {
+                        self.beans = resp.result.beans;
+                    } else {
+                        // TODO.
+                    }
+                    console.log("this.beans: ", self.beans);
+                }
+            });
+        }
+    }
+})
+//app.search();
+</script>
+</body>
+</html>

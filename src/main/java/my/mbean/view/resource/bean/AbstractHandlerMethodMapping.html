@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/beans/fragments :: head (title='HandlerMapping Bean View: '+ ${beanName})"></head>
+<body th:inline="text">
+<section class="container">
+	<div class="well">
+	   <p>HandlerMapping Bean View</p>
+	   <p>Bean Name: <a th:href="${url}" th:text="${beanName}"></a></p>
+	   <p>Bean Class: <span th:text="${beanClass}"></span></p>
+	   <p>Bean Value: <span th:text="${beanValue}"></span></p>
+	</div>
+</section>
+
+<div class="container">
+    <section th:replace="admin/beans/fragments :: beanSearchSection (${kw}, '../beans')" />
+</div>
+
+<!-- properties area -->
+<div class="container-fluid" th:if="${not #lists.isEmpty(properties)}">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+		    <h3>Property View</h3>
+        </div>
+	    <table class="table table-bordered table-condensed table-striped table-hover">
+	        <thead>
+	            <tr>
+		            <th>Name</th>
+		            <th>Value</th>
+		            <th>Type</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	            <tr th:each="prop : ${properties}" th:title="${prop.source}">
+	                <td>
+	                   <!-- <div>pAnnotationMarks</div> -->
+	                   <a th:text="${prop.name}" th:href="${prop.url}">property name</a>
+	                </td>
+	                <td th:switch="${prop.name}">
+                        <div th:case="handlerMethods">
+                            <!-- map value -->
+	                        <ol th:if="${prop.value?.value != null and prop.value.type == 'map'}">
+	                            <li th:each="entry : ${prop.value.value}">
+	                                handlerInfo:
+	                                <span th:if="${#strings.isEmpty(entry.key?.beanName)}" th:text="${entry.key.toString}"></span>
+	                                <a th:if="${not #strings.isEmpty(entry.key?.beanName)}" th:text="${entry.key.beanName}" th:href="${entry.key.beanUrl}"></a>
+	                                <br/>
+	                                handlerMethod:
+	                                <span th:if="${#strings.isEmpty(entry.value?.beanName)}" th:text="${entry.value.toString}"></span>
+	                                <a th:if="${not #strings.isEmpty(entry.value?.beanName)}" th:text="${entry.value.beanName}" th:href="${entry.value.beanUrl}"></a>
+	                            </li>
+	                        </ol>
+                        </div>
+                        <div th:case="*">
+	                        <!-- map value -->
+	                        <ol th:if="${prop.value?.value != null and prop.value.type == 'map'}">
+	                            <li th:each="entry : ${prop.value.value}">
+	                                key:
+	                                <span th:if="${#strings.isEmpty(entry.key?.beanName)}" th:text="${entry.key.toString}"></span>
+	                                <a th:if="${not #strings.isEmpty(entry.key?.beanName)}" th:text="${entry.key.beanName}" th:href="${entry.key.beanUrl}"></a>
+	                                <br/>
+	                                value:
+	                                <span th:if="${#strings.isEmpty(entry.value?.beanName)}" th:text="${entry.value.toString}"></span>
+	                                <a th:if="${not #strings.isEmpty(entry.value?.beanName)}" th:text="${entry.value.beanName}" th:href="${entry.value.beanUrl}"></a>
+	                            </li>
+	                        </ol>
+	                        <!-- array or list value -->
+	                        <ol th:if="${prop.value?.value != null and (prop.value.type == 'list' || prop.value.type == 'array')}">
+	                            <li th:each="value : ${prop.value.value}">
+	                                <span th:if="${!value.ref}" th:text="${value.toString}"></span>
+	                                <a th:if="${value.ref}" th:text="${value.beanName}" th:href="${value.beanUrl}"></a>
+	                            </li>
+	                        </ol>
+	                        <!-- bean reference info -->
+	                        <a th:if="${prop.value?.beanRef != null and prop.value.beanRef.ref}" th:text="${prop.value.beanRef.beanName}" th:href="${prop.value.beanRef.beanUrl}"></a>
+	
+	                        <!-- origin value -->
+	                        <!-- <span th:if="${prop.value?.originValue != null}" th:text="${prop.value.originValue}"></span> -->
+	                        <!-- toString -->
+	                        <span th:if="${!#strings.isEmpty(prop.value?.toString)}" th:text="${prop.value.toString}"></span>
+                        </div>
+	                </td>
+	                <td th:text="${prop.type}"></td>
+	            </tr>
+	        </tbody>
+	        <!-- <tfoot>
+	        </tfoot> -->
+	    </table>
+    </div>
+</div>
+
+<!-- methods area -->
+<div class="container-fluid" th:if="${not #lists.isEmpty(methods)}">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>Methods View</h3>
+        </div>
+        <table class="table table-bordered table-condensed table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Return Type</th>
+                    <th>Declaring Class</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="method : ${methods}">
+                    <td th:switch="${method.callable}">
+                        <ul th:if="${not #lists.isEmpty(method.annotationMarks)}" class="list-unstyled">
+                            <li th:each="mark : ${method.annotationMarks}">
+                                <i th:text="${mark}" />
+                            </li>
+                        </ul>
+                        <a th:case="true" th:text="${method.name}" th:href="${method.url}"></a>
+                        <span th:case="false" th:text="${method.name}"></span>
+                    </td>
+                    <td th:text="${method.returnType}"></td>
+                    <td th:text="${method.declaringClass}"></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr><td><span th:text="'Total: ' + ${methods.size()}"></span></td></tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head th:replace="admin/beans/fragments :: head (title='Admin Beans Index')"></head>
+<body th:inline="text">
+<div class="container theme-showcase" role="main">
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <h1>About this Application</h1>
+      <em>contextId: </em><span th:text="${contextId}"></span>
+      <ul class="list-unstyled">
+	      <li><a th:href="${beansUrlPrefix}+'/springApplication'"><i>springApplication</i></a> when spring.registerApplication is true</li>
+	      <li><a th:href="${beansUrlPrefix}+'/applicationContext'"><i>applicationContext</i></a> when spring.registerApplicationContext is true</li>
+	      <li><a th:href="${beansUrlPrefix}+'/dispatcherServlet'"><i>dispatcherServlet</i></a> default dispatcherServlet</li>
+	      <li><a th:href="${beansUrlPrefix}+'/beansMvcEndpoint'"><i>beansMvcEndpoint</i></a> admin/beans function start bean</li>
+      </ul>
+    </div>
+
+	<div class="page-header">
+	   <h1>Search</h1>
+	</div>
+    <section th:replace="admin/beans/fragments :: beanSearchForm ('')" />
+	
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+	        Show Common Beans
+	    </div>
+	    <div class="panel-body">
+            <p class="bg-info">
+                <a th:href="${beansUrlPrefix}+'/beansService?propertyName=additionalTypeList'">Show More Type</a> || 
+                <a th:href="${beansUrlPrefix}+'/beansService?methodName=clearAllCache'">Clear Cache.</a>
+            </p>
+		    <select id="typesSelect">
+		        <option th:each="type : ${types}" th:value="${type.name}" th:text="${type.simpleName}"></option>
+		    </select>
+	    </div>
+	    <div id="subtypsArea">
+	    	<ul th:replace="admin/beans/fragments :: subtypes"></ul>
+	    </div>
+	</div>
+	
+</div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/beans/fragments :: head (title='method view page')"></head>
+<body th:inline="text">
+<div class="container">
+	<div class="row">
+	    <div class="well">
+	       bean name: <a th:href="${beanUrl}" th:text="${beanName}"></a><br/>
+	       bean class: <span th:text="${beanClassName}"></span>
+	    </div>
+	</div>
+	
+	
+	<div class="row">
+	    <h2>Invoke Method <i th:text="${name}"></i>?</h2>
+	    <form id="beanMethodInvokeForm" class="form" th:action="${invokeUrl}" method="post">
+	        <input class="btn btn-default" type="submit" value="Invoke" />
+	        <p class="errorMsg bg-warning"></p>
+	        <p class="successMsg bg-success"></p>
+
+	        <input type="hidden" th:value="${name}" name="methodName"/>
+	        <input type="hidden" th:value="${beanName}" name="beanName"/>
+	        <input type="hidden" th:value="${contextId}" name="contextId"/>
+	    </form>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Property View: ${beanName}, ${name}</title>
+    <link rel="stylesheet" type="text/css" href="${staticUrlPrefix}/css/bootstrap.min.css"/>
+</head>
+<body class="container">
+<div id="app">
+    <app :value="value" :changeUrl="changeUrl" :source="source"/>
+</div>
+
+<!--  define template -->
+<script type="text/x-template" id="app-template">
+<div>
+    <div class="row">
+        <div class="well">
+            Bean Name: <a href="${beanUrl}">${beanName}</a><br/>
+            Bean Class: <span>${beanClass}</span>
+        </div>
+    </div>
+
+    <div class="row">
+    </div>
+
+    <div class="row">
+        <table class="table table-bordered table-condensed table-hover">
+            <thead>
+                <tr> <th>#</th> <th>value</th> </tr>
+            </thead>
+            <tbody>
+                <tr> <td :title="source">Name</td> <td>${name}</td> </tr>
+                <tr> <td>Type</td> <td>${type}</td> </tr>
+                <tr>
+                    <td>Value</td>
+                    <td>
+                        <prop-value v-if="value" :value="value"/>
+                    </td>
+                </tr>
+            </tbody>
+            <!-- <tfoot></tfoot> -->
+        </table>
+
+        <form v-if="writable" id="changePropertyForm" class="form" :action="changeUrl" method="post">
+            <div class="form-group">
+                <div v-if="type == 'boolean'" class="radio">
+                    <!--<label>
+                        <input v-if="value.toString == 'true'" v-model="changePropertyForm.newValue" class="radio-inline" type="radio" value="true" checked="checked">true</input>
+                        <input v-else v-model="changePropertyForm.newValue" class="radio-inline" type="radio" value="true">true</input>
+                    </label>
+                    <label>
+                        <input v-if="value.toString == 'true'" v-model="changePropertyForm.newValue" class="radio-inline" type="radio" value="false">false</input>
+                        <input v-else v-model="changePropertyForm.newValue" class="radio-inline" type="radio" value="false" checked="checked">false</input>
+                    </label>-->
+                    <label>
+                        <input v-model="changePropertyFormState.newValue" type="radio" value="true" name="newValue" class="radio-inline">true</input>
+                    </label>
+                    <label>
+                        <input v-model="changePropertyFormState.newValue" type="radio" value="false" name="newValue" class="radio-inline">false</input>
+                    </label>
+                </div>
+                <textarea v-else class="form-control" rows="5" v-model="changePropertyFormState.newValue" name="newValue"></textarea>
+            </div>
+            <div class="form-group">
+                <input @click="changeProp" class="btn btn-default" type="button" value="Change"/>
+            </div>
+            <p class="errorMsg bg-warning">{{changePropertyFormState.changeResult}}</p>
+
+<!--            <input type="hidden" v-model="changePropertyFormState.name" name="propertyName"/>
+            <input type="hidden" v-model="changePropertyFormState.beanName" name="beanName"/>
+            <input type="hidden" v-model="changePropertyFormState.contextId" name="contextId"/>-->
+        </form>
+    </div>
+</div>
+</script>
+
+<script src="${staticUrlPrefix}/js/vue.js"></script>
+<script src="${staticUrlPrefix}/js/jquery-3.1.1.min.js"></script>
+
+<script type="text/javascript">
+    var staticUrlPrefix = "${staticUrlPrefix}";
+    var testState = {
+        value: {"tip":"", toString: "false"},
+        type: "boolean",
+        writable: true,
+        source: "STANDARD",
+    };
+    var initState = {
+        value: ${value},
+        type: "${type}",
+        writable: ${writable},
+        source: ${source},
+        changeUrl: "${changeUrl}",
+        changePropertyFormState: {
+            propertyName: "${name}",
+            beanName: "${beanName}",
+            contextId: "${contextId}",
+            originValue: ${value},
+            newValue: null,
+            changeResult: null,
+        }
+    };
+</script>
+
+<script type="text/javascript" src="${staticUrlPrefix}/js/property.js"></script>
+</body>
+</html>

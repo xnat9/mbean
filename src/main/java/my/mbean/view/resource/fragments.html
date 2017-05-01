@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head (title)">
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title th:text="${title}">Fragments title</title>
+
+
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap/bootstrap.min.css}" />
+
+<style type="text/css">
+/* 表格内容垂直居中 */
+td {
+    vertical-align: middle !important;
+}
+</style>
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+  <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<script type="text/javascript" th:src="@{/js/lib/jquery-3.1.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/lib/jquery.form.js}"></script>
+<script type="text/javascript" th:src="@{/js/admin/beans/index.js}"></script>
+</head>
+<body>
+<section th:fragment="headerSection">
+    <a></a>
+</section>
+
+<section th:fragment="beanSearchSection (kw, actionUrl)">
+	<form th:fragment="beanSearchForm (kw)" th:action="${actionUrl}" id="beanSearchForm" method="get" class="form-inline">
+	    <div class="form-group">
+	        <label class="sr-only" />
+	        <input class="form-control" type="text" name="beanName" th:value="${kw}" placeholder="Search bean name" style="width: 500px;"/>
+	    </div>
+	    <input class="btn btn-default" type="submit" value="Search"/>
+	    <input type="hidden" value="searchBeans" name="action" />
+	</form>
+</section>
+
+<ul th:fragment="subtypes" th:if="${not #lists.isEmpty(subtypes)}" class="list-group">
+    <li th:each="bean : ${subtypes}" class="list-group-item">
+        <a th:href="${bean.url}" th:text="${bean.beanName}">beanName</a>
+    </li>
+</ul>
+
+<div th:fragment="propertyValue (value)" th:title="${value?.tip}">
+    <!-- map value -->
+    <ol th:if="${value?.value != null and value.type == 'map'}">
+        <li th:each="entry : ${value.value}">
+            <i>key:</i>
+            <span th:if="${#strings.isEmpty(entry.key?.beanName)}" th:text="${entry.key.toString}"></span>
+            <a th:if="${not #strings.isEmpty(entry.key?.beanName)}" th:text="${entry.key.beanName}" th:href="${entry.key.beanUrl}"></a>
+            <br/>
+            <i>value:</i>
+            <span th:if="${#strings.isEmpty(entry.value?.beanName)}" th:text="${entry.value.toString}"></span>
+            <a th:if="${not #strings.isEmpty(entry.value?.beanName)}" th:text="${entry.value.beanName}" th:href="${entry.value.beanUrl}"></a>
+        </li>
+    </ol>
+    <!-- array or list value -->
+    <ol th:if="${value?.value != null and (value.type == 'list' || value.type == 'array')}">
+        <li th:each="value : ${value.value}">
+            <span th:if="${!value.ref}" th:text="${value.toString}"></span>
+            <a th:if="${value.ref}" th:text="${value.beanName}" th:href="${value.beanUrl}"></a>
+        </li>
+    </ol>
+    <!-- bean reference info -->
+    <a th:if="${value?.beanRef != null and value.beanRef.ref}" th:text="${value.beanRef.beanName}" th:href="${value.beanRef.beanUrl}"></a>
+
+    <!-- origin value -->
+    <!-- <span th:if="${value?.originValue != null}" th:text="${value.originValue}"></span> -->
+    <!-- toString -->
+    <span th:if="${!#strings.isEmpty(value?.toString)}" th:text="${value.toString}"></span>
+</div>
+</body>
+</html>
