@@ -1,12 +1,10 @@
 package my.mbean;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
+import my.mbean.service.BeansService;
+import my.mbean.spring.GenericService;
 import my.mbean.util.Response;
-import org.apache.commons.lang3.StringUtils;
+import my.mbean.util.Utils;
+import my.mbean.view.SpelView;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -16,10 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.AbstractHandlerMethodMapping;
 
-import my.mbean.service.BeansService;
-import my.mbean.spring.GenericService;
-import my.mbean.util.Utils;
-import my.mbean.view.SpelView;
+import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping(MBeanController.MBEAN_URL_PREFIX_EL)
@@ -97,11 +94,11 @@ public class MBeanController extends GenericService {
         String propertyName = (String) pParams.get(PARAME_PROPERTY_NAME);
         String methodName = (String) pParams.get(PARAME_METHOD_NAME);
         String templateName = null;
-        if (StringUtils.isNotBlank(propertyName)) {
+        if (Utils.isNotBlank(propertyName)) {
             templateName = "property";
             Object propertyVO = beansService.buildPropertyVO(propertyName, pBeanName, contextId);
             Utils.extractPropertiesToMapValueToJsonStr(propertyVO, modelAndView.getModel());
-        } else if (StringUtils.isNotBlank(methodName)) {
+        } else if (Utils.isNotBlank(methodName)) {
             Map<String, Object> methodInfo = beansService.buildMethodInfo(methodName, pBeanName, contextId);
             modelAndView.addAllObjects(methodInfo);
             templateName = "method";

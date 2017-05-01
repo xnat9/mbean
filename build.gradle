@@ -26,7 +26,7 @@ springBoot {
 
 jar {
     baseName = 'mbean'
-    version = 'mbean.jar'
+    version = 'v0.1'
     manifest {
         attributes 'Implementation-Title': 'Gradle Quickstart',
                    'Implementation-Version': version

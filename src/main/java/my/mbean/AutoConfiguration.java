@@ -5,7 +5,6 @@ import my.mbean.support.ConfigurationBeanVOBuilder;
 import my.mbean.support.GenericBeanVOBuilder;
 import my.mbean.support.GenericPropertyVOBuilder;
 import my.mbean.util.Utils;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +18,6 @@ public class AutoConfiguration {
     @Bean
     // @ConfigurationProperties(prefix = CONFIG_PREFIX_ACTUATOR_ADMIN_BEANS +
     // ".beansService")
-    @ConditionalOnBean(MBeanController.class)
     @Lazy
     BeansService beansService() {
         BeansService beansService = new BeansService();
@@ -41,7 +39,6 @@ public class AutoConfiguration {
 
 
     @Bean
-    @ConditionalOnBean(MBeanController.class)
     WebMvcConfigurerAdapter adminBeansWebMvcConfigurer() {
         WebMvcConfigurerAdapter webMvcConfigurer = new WebMvcConfigurerAdapter() {
             @Override
@@ -59,7 +56,6 @@ public class AutoConfiguration {
     @Primary
     // @ConfigurationProperties(prefix = CONFIG_PREFIX_ACTUATOR_ADMIN_BEANS +
     // ".beanview.builder.default")
-    @ConditionalOnBean(BeansService.class)
         // @Scope(proxyMode=ScopedProxyMode.TARGET_CLASS)
     GenericBeanVOBuilder defaultBeanVOBuilder() {
         // default BeanVOBuilder.
@@ -72,7 +68,6 @@ public class AutoConfiguration {
     @Lazy
     // @ConfigurationProperties(prefix = CONFIG_PREFIX_ACTUATOR_ADMIN_BEANS +
     // ".beanview.builder.configuration")
-    @ConditionalOnBean(BeansService.class)
     ConfigurationBeanVOBuilder configurationBeanVOBuilder(final ApplicationContext pContext) {
         return new ConfigurationBeanVOBuilder() {
             @Override
@@ -88,7 +83,6 @@ public class AutoConfiguration {
     @Primary
     // @ConfigurationProperties(prefix = CONFIG_PREFIX_ACTUATOR_ADMIN_BEANS +
     // ".propertyview.builder")
-    @ConditionalOnBean(BeansService.class)
     GenericPropertyVOBuilder defaultPropertyVOBuilder() {
         return new GenericPropertyVOBuilder() {
 
