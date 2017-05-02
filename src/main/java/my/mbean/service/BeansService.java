@@ -1,5 +1,6 @@
 package my.mbean.service;
 
+import my.mbean.spring.BaseBean;
 import my.mbean.MBeanController;
 import my.mbean.spring.GenericService;
 import my.mbean.support.BeanVOBuilder;
@@ -566,7 +567,7 @@ public class BeansService extends GenericService {
                 && !Modifier.isAbstract(pMethod.getModifiers())
                 && BeanUtils.findPropertyForMethod(pMethod) == null // filter getter and setter method. inner class have some problem.
                 && pMethod.getAnnotation(Bean.class) == null
-                && !my.mbean.spring.BaseBean.class.equals(declaringClass));
+                && !BaseBean.class.equals(declaringClass));
     }
 
 

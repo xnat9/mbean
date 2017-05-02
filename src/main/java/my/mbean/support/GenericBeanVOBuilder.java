@@ -1,10 +1,9 @@
 package my.mbean.support;
 
 import my.mbean.service.BeansService;
+import my.mbean.util.Utils;
 import my.mbean.service.PropertyAccessService;
 import my.mbean.spring.BaseBean;
-import my.mbean.support.ValueWrapper.BeanRef;
-import my.mbean.util.Utils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeanUtils;
@@ -432,7 +431,7 @@ public class GenericBeanVOBuilder extends BeanVOBuilder<BeanVO> {
         }
 
         // 先探测对象是否为一个bean reference 对象(指向一个容器中的bean对象)
-        BeanRef beanRef = beansService.detectBeanRef(pPropInstance);
+        ValueWrapper.BeanRef beanRef = beansService.detectBeanRef(pPropInstance);
         if (beanRef.isRef()) {
             valueWrapper.setBeanRef(beanRef);
             return valueWrapper; // 如果是一个bean reference 就直接返回.
@@ -471,7 +470,7 @@ public class GenericBeanVOBuilder extends BeanVOBuilder<BeanVO> {
         return (Object.class.equals(declaringClass)
                 || Modifier.isStatic(pMethod.getModifiers())
                 || pMethod.isBridge()
-                || my.mbean.spring.BaseBean.class.equals(declaringClass)
+                || BaseBean.class.equals(declaringClass)
                 || Collections.class.equals(declaringClass)
                 || Set.class.equals(declaringClass)
                 || List.class.equals(declaringClass)

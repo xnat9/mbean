@@ -1,9 +1,9 @@
 package my.mbean;
 
 import my.mbean.service.BeansService;
+import my.mbean.util.Utils;
 import my.mbean.spring.GenericService;
 import my.mbean.util.Response;
-import my.mbean.util.Utils;
 import my.mbean.view.SpelView;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

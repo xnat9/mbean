@@ -24,6 +24,7 @@ import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import my.mbean.spring.GenericService;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.PropertyAccessor;
 import org.springframework.beans.PropertyEditorRegistrySupport;
@@ -59,8 +60,6 @@ import org.springframework.core.io.support.ResourceArrayPropertyEditor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
 import org.xml.sax.InputSource;
-
-import my.mbean.spring.GenericService;
 
 /**
  * 提供常用的用属性操作.比如: 从一个对象中拿一个属性,为一个对象set一个值,等等.

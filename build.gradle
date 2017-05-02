@@ -20,21 +20,21 @@ apply plugin: 'org.springframework.boot'
 //sourceSets.main.resources.srcDirs = sourceSets.main.java.srcDirs
 
 springBoot {
-  mainClass = "my.mbean.Application"
+  mainClass = "my.Application"
 }
-
 
 jar {
     baseName = 'mbean'
     version = 'v0.1'
     manifest {
         attributes 'Implementation-Title': 'Gradle Quickstart',
-                   'Implementation-Version': version
+                'Implementation-Version': version
     }
-    processResources {
-        from('src/main/java') {
-            include '**/*'
-        }
+}
+
+processResources {
+    from('src/main/java') {
+        exclude '**/*.java'
     }
 }
 
@@ -54,8 +54,8 @@ dependencies {
     compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
     // https://mvnrepository.com/artifact/commons-io/commons-io
     // compile group: 'commons-io', name: 'commons-io', version: '2.5'
-    
-        // add jsp support.
+
+    // add jsp support.
     // runtime('tomcat:tomcat-embed-jasper')
     // runtime("org.apache.tomcat.embed:tomcat-embed-jasper")
     // compile('javax.servlet:jstl')
@@ -67,8 +67,8 @@ test {
 
 uploadArchives {
     repositories {
-       flatDir {
-           dirs 'repos'
-       }
+        flatDir {
+            dirs 'repos'
+        }
     }
 }

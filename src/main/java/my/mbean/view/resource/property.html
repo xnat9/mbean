@@ -43,20 +43,20 @@
         <form v-if="writable" id="changePropertyForm" class="form" :action="changeUrl" method="post">
             <div class="form-group">
                 <div v-if="type == 'boolean'" class="radio">
-                    <!--<label>
-                        <input v-if="value.toString == 'true'" v-model="changePropertyForm.newValue" class="radio-inline" type="radio" value="true" checked="checked">true</input>
-                        <input v-else v-model="changePropertyForm.newValue" class="radio-inline" type="radio" value="true">true</input>
+                    <label>
+                        <input v-if="value.originValue" v-model="changePropertyFormState.newValue" class="radio-inline" type="radio" value="true" checked="checked">true</input>
+                        <input v-else v-model="changePropertyFormState.newValue" class="radio-inline" type="radio" value="true">true</input>
                     </label>
                     <label>
-                        <input v-if="value.toString == 'true'" v-model="changePropertyForm.newValue" class="radio-inline" type="radio" value="false">false</input>
-                        <input v-else v-model="changePropertyForm.newValue" class="radio-inline" type="radio" value="false" checked="checked">false</input>
-                    </label>-->
-                    <label>
+                        <input v-if="value.originValue" v-model="changePropertyFormState.newValue" class="radio-inline" type="radio" value="false">false</input>
+                        <input v-else v-model="changePropertyFormState.newValue" class="radio-inline" type="radio" value="false" checked="checked">false</input>
+                    </label>
+                    <!--<label>
                         <input v-model="changePropertyFormState.newValue" type="radio" value="true" name="newValue" class="radio-inline">true</input>
                     </label>
                     <label>
                         <input v-model="changePropertyFormState.newValue" type="radio" value="false" name="newValue" class="radio-inline">false</input>
-                    </label>
+                    </label>-->
                 </div>
                 <textarea v-else class="form-control" rows="5" v-model="changePropertyFormState.newValue" name="newValue"></textarea>
             </div>
@@ -94,8 +94,8 @@
             propertyName: "${name}",
             beanName: "${beanName}",
             contextId: "${contextId}",
-            originValue: ${value},
-            newValue: null,
+            originValue: ${value.originValue},
+            newValue: ${value.originValue},
             changeResult: null,
         }
     };
