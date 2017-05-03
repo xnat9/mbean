@@ -24,6 +24,10 @@ public class Log4J2LogSystem extends LogSystem {
         LEVELS.put(LogLevel.OFF, Level.OFF);
     }
 
+    public Log4J2LogSystem(ClassLoader pClassLoader) {
+        super(pClassLoader);
+    }
+
     @Override
     public void setLogLevel(String loggerName, LogLevel logLevel) {
         Level level = LEVELS.get(logLevel);

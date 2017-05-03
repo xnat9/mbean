@@ -19,6 +19,12 @@ public abstract class LogSystem {
      * {@link LogSystem} should be used.
      */
     public static final String NONE = "none";
+    private ClassLoader classLoader;
+
+    public LogSystem(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+    }
+    public LogSystem() {}
 
     /**
      * The name used for the root logger. LogSystem implementations should ensure that
@@ -31,10 +37,10 @@ public abstract class LogSystem {
 
     static {
         Map<String, String> systems = new LinkedHashMap<String, String>();
-        systems.put("ch.qos.logback.core.Appender",
-                "org.springframework.boot.logging.logback.LogbackLogSystem");
+//        systems.put("ch.qos.logback.core.Appender",
+//                "org.springframework.boot.logging.logback.LogbackLogSystem");
         systems.put("org.apache.logging.log4j.core.impl.Log4jContextFactory",
-                "org.springframework.boot.logging.log4j2.Log4J2LogSystem");
+                "my.mbean.util.log.Log4J2LogSystem");
         systems.put("java.util.logging.LogManager",
                 "org.springframework.boot.logging.java.JavaLogSystem");
         SYSTEMS = Collections.unmodifiableMap(systems);
@@ -96,6 +102,10 @@ public abstract class LogSystem {
      * {@link LogSystem} that does nothing.
      */
     static class NoOpLogSystem extends LogSystem {
+        public NoOpLogSystem(ClassLoader pClassLoader) {
+            super(pClassLoader);
+        }
+        public NoOpLogSystem() {}
         @Override
         public void setLogLevel(String loggerName, LogLevel level) {
 
