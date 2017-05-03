@@ -1,13 +1,12 @@
 package my.mbean.spring;
 
-import javax.annotation.PreDestroy;
-
+import my.mbean.util.Log;
+import my.mbean.util.log.LogLevel;
+import my.mbean.util.log.LogSystem;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.logging.LogLevel;
-import org.springframework.boot.logging.LoggingSystem;
 
-import my.mbean.util.Log;
+import javax.annotation.PreDestroy;
 
 /**
  * provide generic service for bean.
@@ -18,7 +17,7 @@ public class GenericService extends BaseBean implements InitializingBean {
     protected final Log   log         = Log.of(LOGGER_NAME);
     private boolean       running;
     @Autowired
-    private LoggingSystem loggingSystem;
+    private LogSystem logSystem;
     /**
      * service information.
      */
@@ -125,9 +124,9 @@ public class GenericService extends BaseBean implements InitializingBean {
      */
     public void setLoggingInfo(boolean pLoggingInfo) {
         if (pLoggingInfo) {
-            loggingSystem.setLogLevel(LOGGER_NAME, LogLevel.INFO);
+            logSystem.setLogLevel(LOGGER_NAME, LogLevel.INFO);
         } else {
-            loggingSystem.setLogLevel(LOGGER_NAME, LogLevel.DEBUG);
+            logSystem.setLogLevel(LOGGER_NAME, LogLevel.DEBUG);
         }
     }
 
@@ -148,9 +147,9 @@ public class GenericService extends BaseBean implements InitializingBean {
      */
     public void setLoggingWarning(boolean pLoggingWarning) {
         if (pLoggingWarning) {
-            loggingSystem.setLogLevel(LOGGER_NAME, LogLevel.WARN);
+            logSystem.setLogLevel(LOGGER_NAME, LogLevel.WARN);
         } else {
-            loggingSystem.setLogLevel(LOGGER_NAME, LogLevel.ERROR);
+            logSystem.setLogLevel(LOGGER_NAME, LogLevel.ERROR);
         }
     }
 
@@ -171,9 +170,9 @@ public class GenericService extends BaseBean implements InitializingBean {
      */
     public void setLoggingError(boolean pLoggingError) {
         if (pLoggingError) {
-            loggingSystem.setLogLevel(LOGGER_NAME, LogLevel.ERROR);
+            logSystem.setLogLevel(LOGGER_NAME, LogLevel.ERROR);
         } else {
-            loggingSystem.setLogLevel(LOGGER_NAME, LogLevel.OFF);
+            logSystem.setLogLevel(LOGGER_NAME, LogLevel.OFF);
         }
     }
 
@@ -194,9 +193,9 @@ public class GenericService extends BaseBean implements InitializingBean {
      */
     public void setLoggingDebug(boolean pLoggingDebug) {
         if (pLoggingDebug) {
-            loggingSystem.setLogLevel(LOGGER_NAME, LogLevel.DEBUG);
+            logSystem.setLogLevel(LOGGER_NAME, LogLevel.DEBUG);
         } else {
-            loggingSystem.setLogLevel(LOGGER_NAME, LogLevel.INFO);
+            logSystem.setLogLevel(LOGGER_NAME, LogLevel.INFO);
         }
     }
 
@@ -217,9 +216,9 @@ public class GenericService extends BaseBean implements InitializingBean {
      */
     public void setLoggingTrace(boolean pLoggingTrace) {
         if (pLoggingTrace) {
-            loggingSystem.setLogLevel(LOGGER_NAME, LogLevel.TRACE);
+            logSystem.setLogLevel(LOGGER_NAME, LogLevel.TRACE);
         } else {
-            loggingSystem.setLogLevel(LOGGER_NAME, LogLevel.OFF);
+            logSystem.setLogLevel(LOGGER_NAME, LogLevel.OFF);
         }
     }
 

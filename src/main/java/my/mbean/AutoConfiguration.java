@@ -4,7 +4,9 @@ import my.mbean.service.BeansService;
 import my.mbean.support.ConfigurationBeanVOBuilder;
 import my.mbean.support.GenericBeanVOBuilder;
 import my.mbean.support.GenericPropertyVOBuilder;
+import my.mbean.util.Log;
 import my.mbean.util.Utils;
+import my.mbean.util.log.LogSystem;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +26,10 @@ public class AutoConfiguration {
         return beansService;
     }
 
+    @Bean
+    LogSystem logSystem(ApplicationContext pContext) {
+        return LogSystem.get(pContext.getClassLoader());
+    }
 
 //    @Bean
 //    @ConditionalOnMissingBean
