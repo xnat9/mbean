@@ -4,7 +4,6 @@ import my.mbean.service.BeansService;
 import my.mbean.support.ConfigurationBeanVOBuilder;
 import my.mbean.support.GenericBeanVOBuilder;
 import my.mbean.support.GenericPropertyVOBuilder;
-import my.mbean.util.Log;
 import my.mbean.util.Utils;
 import my.mbean.util.log.LogSystem;
 import org.springframework.context.ApplicationContext;
@@ -12,10 +11,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
+@EnableWebMvc
 public class AutoConfiguration {
     @Bean
     // @ConfigurationProperties(prefix = CONFIG_PREFIX_ACTUATOR_ADMIN_BEANS +

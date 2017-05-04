@@ -1,10 +1,9 @@
 package my.mbean.support;
 
 import my.mbean.service.BeansService;
-import my.mbean.util.Utils;
 import my.mbean.service.PropertyAccessService;
 import my.mbean.spring.GenericService;
-import org.apache.commons.lang3.reflect.FieldUtils;
+import my.mbean.util.Utils;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +109,7 @@ public class GenericPropertyVOBuilder extends GenericService implements Property
         PropertySource propertySource = null;
         PropertyDescriptor pd = BeanUtils.getPropertyDescriptor(beanClass, pPropName);
         if (pd == null) {
-            List<Field> fields = FieldUtils.getAllFieldsList(beanClass);
+            List<Field> fields = Utils.getAllFieldsList(beanClass);
             for (Field field : fields) {
                 // use field's name use for property name.
                 String propName = field.getName();
@@ -140,7 +139,7 @@ public class GenericPropertyVOBuilder extends GenericService implements Property
         Object propInstance = null;
         PropertyDescriptor pd = BeanUtils.getPropertyDescriptor(beanClass, pPropName);
         if (pd == null || pd.getReadMethod() == null) {
-            List<Field> fields = FieldUtils.getAllFieldsList(beanClass);
+            List<Field> fields = Utils.getAllFieldsList(beanClass);
             for (Field field : fields) {
                 // use field's name use for property name.
                 String propName = field.getName();
@@ -245,7 +244,7 @@ public class GenericPropertyVOBuilder extends GenericService implements Property
         if (pd == null) {
             log.debug("populateType(): not found PropertyDescriptor, propName: {0} in class: {1.name}", pPropName, beanClass);
             if (pd == null) {
-                List<Field> fields = FieldUtils.getAllFieldsList(beanClass);
+                List<Field> fields = Utils.getAllFieldsList(beanClass);
                 for (Field field : fields) {
                     // use field's name use for property name.
                     String propName = field.getName();

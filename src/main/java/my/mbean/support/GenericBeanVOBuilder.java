@@ -1,10 +1,9 @@
 package my.mbean.support;
 
 import my.mbean.service.BeansService;
-import my.mbean.util.Utils;
 import my.mbean.service.PropertyAccessService;
 import my.mbean.spring.BaseBean;
-import org.apache.commons.lang3.reflect.FieldUtils;
+import my.mbean.util.Utils;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -230,7 +229,7 @@ public class GenericBeanVOBuilder extends BeanVOBuilder<BeanVO> {
             propertyInfo.setAnnotationMarks(annotationMarks);
         }
         // property from field.
-        List<Field> fields = FieldUtils.getAllFieldsList(beanClass);
+        List<Field> fields = Utils.getAllFieldsList(beanClass);
         for (Field field : fields) {
             // use field's name use for property name.
             String propName = field.getName();

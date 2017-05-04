@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.AbstractHandlerMethodMapping;
 
@@ -53,10 +54,11 @@ public class MBeanController extends GenericService {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        beansUrlPrefix = CONTEXT_URL_PREFIX + "/beans";
-        propertyChangeUrl = CONTEXT_URL_PREFIX + URL_BEAN_CHANGE;
-        methodInvokeUrl = CONTEXT_URL_PREFIX + URL_BEAN_INVOKE;
-        staticResourceUrlPrefix = CONTEXT_URL_PREFIX + "/static/resource";
+        String servletContextpath = ((WebApplicationContext) getApplicationContext()).getServletContext().getContextPath();
+        beansUrlPrefix = servletContextpath + CONTEXT_URL_PREFIX + "/beans";
+        propertyChangeUrl = servletContextpath + CONTEXT_URL_PREFIX + URL_BEAN_CHANGE;
+        methodInvokeUrl = servletContextpath + CONTEXT_URL_PREFIX + URL_BEAN_INVOKE;
+        staticResourceUrlPrefix = servletContextpath + CONTEXT_URL_PREFIX + "/static/resource";
         customInit();
     }
 

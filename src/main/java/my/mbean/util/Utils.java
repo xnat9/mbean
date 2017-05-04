@@ -1,14 +1,8 @@
 package my.mbean.util;
 
-import java.beans.PropertyDescriptor;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.Map;
-
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.springframework.aop.TargetClassAware;
 import org.springframework.aop.framework.Advised;
@@ -18,11 +12,33 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.beans.PropertyDescriptor;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.util.*;
 
 public class Utils {
+    public static List<Field> getAllFieldsList(Class<?> cls) {
+        if (cls == null) return Collections.emptyList();
+        ArrayList allFields = new ArrayList();
+
+        for (Class currentClass = cls; currentClass != null; currentClass = currentClass.getSuperclass()) {
+            Field[] declaredFields = currentClass.getDeclaredFields();
+            Field[] var4 = declaredFields;
+            int var5 = declaredFields.length;
+
+            for (int var6 = 0; var6 < var5; ++var6) {
+                Field field = var4[var6];
+                allFields.add(field);
+            }
+        }
+
+        return allFields;
+    }
+
     public static String toJsonStr(Object pObj) {
         ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(Include.NON_NULL);
         try {
@@ -32,7 +48,6 @@ public class Utils {
         }
         return null;
     }
-
 
 
     public static String toString(InputStream is) {
@@ -58,7 +73,6 @@ public class Utils {
     }
 
 
-
     public static String buildClassPath(Class<?> pCls, String pSuffix) {
         StringBuilder sb = new StringBuilder("classpath:/");
         System.out.println(pCls.getPackage().getName());
@@ -67,7 +81,6 @@ public class Utils {
         }
         return sb.append(pSuffix).toString();
     }
-
 
 
     public static Object extractOriginInstance(Object pWrapper) {
@@ -90,7 +103,6 @@ public class Utils {
     }
 
 
-
     public static Object getValue(Field pField, Object pObject) {
         if (pField == null || pObject == null)
             return null;
@@ -101,7 +113,6 @@ public class Utils {
         }
         return null;
     }
-
 
 
     @SuppressWarnings("unchecked")
@@ -115,7 +126,6 @@ public class Utils {
         }
         return null;
     }
-
 
 
     public static String toString(Object pObj) {
@@ -147,10 +157,10 @@ public class Utils {
                 }
                 if (Collection.class.isAssignableFrom(clazz)) {
                     append("size", ((Collection<?>) getObject()).size())
-                        .append(getObject().toString());
+                            .append(getObject().toString());
                 } else if (Map.class.isAssignableFrom(clazz)) {
                     append("size", ((Map<?, ?>) getObject()).size())
-                        .append(getObject().toString());
+                            .append(getObject().toString());
                 } else {
                     appendFieldsIn(clazz);
                     while (clazz.getSuperclass() != null && clazz != getUpToClass()) {
@@ -165,17 +175,14 @@ public class Utils {
     }
 
 
-
     public static boolean isBlank(final CharSequence cs) {
         return !StringUtils.hasText(cs);
     }
 
 
-
     public static boolean isNotBlank(final CharSequence cs) {
         return StringUtils.hasText(cs);
     }
-
 
 
     public static void extractPropertiesToMap(Object pObj, Map<String, Object> pMap) {
@@ -191,7 +198,6 @@ public class Utils {
             }
         }
     }
-
 
 
     public static void extractPropertiesToMapValueToJsonStr(Object pObj, Map<String, Object> pMap) {
@@ -213,11 +219,9 @@ public class Utils {
     }
 
 
-
     public static boolean isEmpty(Collection<?> pCollection) {
         return (pCollection == null || pCollection.isEmpty());
     }
-
 
 
     public static boolean isNotEmpty(Collection<?> pCollection) {
@@ -225,17 +229,14 @@ public class Utils {
     }
 
 
-
     public static boolean isEmpty(Object[] array) {
         return (array == null || array.length == 0);
     }
 
 
-
     public static boolean isNotEmpty(Object[] array) {
         return !isEmpty(array);
     }
-
 
 
     public static boolean isEmpty(final Map<?, ?> map) {
