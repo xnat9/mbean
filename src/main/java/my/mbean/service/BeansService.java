@@ -1,7 +1,9 @@
 package my.mbean.service;
 
+import my.mbean.MBeanConfiguration;
+import my.mbean.web.MBeanController;
+import my.mbean.web.MBeanServlet;
 import my.mbean.spring.BaseBean;
-import my.mbean.MBeanController;
 import my.mbean.spring.GenericService;
 import my.mbean.support.BeanVOBuilder;
 import my.mbean.support.PropertyChangeEvent;
@@ -27,8 +29,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
-import org.springframework.util.*;
-import org.springframework.web.servlet.HandlerMapping;
+import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -63,7 +69,7 @@ public class BeansService extends GenericService {
     @Autowired
     PropertyAccessService propertyAccessService;
     @Autowired
-    MBeanController mbeanController;
+    MBeanConfiguration mBeanConfiguration;
 
 
     @Override
@@ -149,7 +155,7 @@ public class BeansService extends GenericService {
         Map<String, Object> methodInfo = new HashMap<>();
         methodInfo.put("name", pMethodName);
         methodInfo.put("beanName", pBeanName);
-        methodInfo.put("invokeUrl", getMethodInvokeUrl());
+        methodInfo.put("invokeUrl", mBeanConfiguration.getMethodInvokeUrl());
 
         ConfigurableApplicationContext context = getContext(pContextId);
         methodInfo.put("contextId", context.getId());
@@ -504,14 +510,14 @@ public class BeansService extends GenericService {
 
 
     public String getHtmlTemplate(String pTemplateName) {
-        String htmlTemplate = Utils.toString(MBeanController.class.getResourceAsStream("view/resource/" + pTemplateName + ".html"));
+        String htmlTemplate = Utils.toString(MBeanConfiguration.class.getResourceAsStream("view/resource/" + pTemplateName + ".html"));
         return htmlTemplate;
     }
 
 
     public String buildPropertyUrl(String pBeanName, String pPropName, ApplicationContext pContext) {
         StringBuilder sb = new StringBuilder()
-                .append(mbeanController.getBeansUrlPrefix())
+                .append(mBeanConfiguration.getBeansUrlPrefix())
                 .append("/")
                 .append(pBeanName)
                 .append("?").append(MBeanController.PARAME_PROPERTY_NAME).append("=").append(pPropName);
@@ -524,7 +530,7 @@ public class BeansService extends GenericService {
 
     public String buildMethodUrl(String pBeanName, String pMethodName, ApplicationContext pContext) {
         StringBuilder sb = new StringBuilder()
-                .append(mbeanController.getBeansUrlPrefix())
+                .append(mBeanConfiguration.getBeansUrlPrefix())
                 .append("/")
                 .append(pBeanName)
                 .append("?").append(MBeanController.PARAME_METHOD_NAME).append("=").append(pMethodName);
@@ -537,7 +543,7 @@ public class BeansService extends GenericService {
 
     public String buildBeanUrl(String pBeanName, ApplicationContext pContext) {
         StringBuilder sb = new StringBuilder()
-                .append(mbeanController.getBeansUrlPrefix())
+                .append(mBeanConfiguration.getBeansUrlPrefix())
                 .append("/")
                 .append(pBeanName);
         if (null != pContext) {
@@ -674,7 +680,7 @@ public class BeansService extends GenericService {
         typeList.add(BeanPostProcessor.class);
         typeList.add(BeanFactoryPostProcessor.class);
         typeList.add(Configuration.class);
-        typeList.add(HandlerMapping.class);
+//        typeList.add(HandlerMapping.class);
         if (!CollectionUtils.isEmpty(getAdditionalTypeList())) {
             typeList.addAll(getAdditionalTypeList());
         }
@@ -747,22 +753,6 @@ public class BeansService extends GenericService {
         } else {
             beanVOBuilders = new HashMap<>(pBeanVOBuilders);
         }
-    }
-
-
-    /**
-     * @return the propertyChangeUrl
-     */
-    public String getPropertyChangeUrl() {
-        return mbeanController.getPropertyChangeUrl();
-    }
-
-
-    /**
-     * @return the propertyChangeUrl
-     */
-    public String getMethodInvokeUrl() {
-        return mbeanController.getMethodInvokeUrl();
     }
 
 

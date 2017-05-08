@@ -1,5 +1,6 @@
 package my.mbean.support;
 
+import my.mbean.MBeanConfiguration;
 import my.mbean.service.BeansService;
 import my.mbean.service.PropertyAccessService;
 import my.mbean.spring.GenericService;
@@ -11,6 +12,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.util.ClassUtils;
 
+import javax.annotation.Resource;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -29,6 +31,8 @@ public class GenericPropertyVOBuilder extends GenericService implements Property
     private BeansService beansService;
     @Autowired
     protected PropertyAccessService propertyAccessService;
+    @Resource
+    private MBeanConfiguration mBeanConfiguration;
 
 
 
@@ -61,7 +65,7 @@ public class GenericPropertyVOBuilder extends GenericService implements Property
         propertyVO.setBeanName(beanName);
         log.trace("populate PropertyVO.beanName: {0}", beanName);
 
-        String changeUrl = beansService.getPropertyChangeUrl();
+        String changeUrl = mBeanConfiguration.getPropertyChangeUrl();
         propertyVO.setChangeUrl(changeUrl);
         log.trace("populate PropertyVO.changeUrl: {0}", changeUrl);
 

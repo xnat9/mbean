@@ -10,6 +10,38 @@
 </div>
 
 <!--  define template -->
+<script type="text/x-template" id="property-change-form-template">
+<form v-if="writable" id="changePropertyForm" class="form" method="post">
+    <div class="form-group">
+        <div v-if="type == 'boolean'" class="radio">
+            <!-- <label>
+                <input v-if="value.originValue" v-model="formState.newValue" class="radio-inline" type="radio" value="true" checked="checked">true</input>
+                <input v-else v-model="formState.newValue" class="radio-inline" type="radio" value="true">true</input>
+            </label>
+            <label>
+                <input v-if="value.originValue" v-model="formState.newValue" class="radio-inline" type="radio" value="false">false</input>
+                <input v-else v-model="formState.newValue" class="radio-inline" type="radio" value="false" checked="checked">false</input>
+            </label> -->
+            <label>
+                <input v-model="formState.newValue" type="radio" value="true" name="newValue" class="radio-inline" :checked="value.originValue">true</input>
+            </label>
+            <label>
+                <input v-model="formState.newValue" type="radio" value="false" name="newValue" class="radio-inline" :checked="!value.originValue">false</input>
+            </label>
+        </div>
+        <textarea v-else class="form-control" rows="5" v-model="formState.newValue" name="newValue"></textarea>
+    </div>
+    <div class="form-group">
+        <input @click="submit" class="btn btn-default" type="button" value="Change"/>
+    </div>
+    <p class="errorMsg bg-warning">{{formState.changeResult}}</p>
+
+    <!--            <input type="hidden" v-model="changePropertyFormState.name" name="propertyName"/>
+                <input type="hidden" v-model="changePropertyFormState.beanName" name="beanName"/>
+                <input type="hidden" v-model="changePropertyFormState.contextId" name="contextId"/>-->
+</form>
+</script>
+
 <script type="text/x-template" id="app-template">
 <div>
     <div class="row">
@@ -40,35 +72,7 @@
             <!-- <tfoot></tfoot> -->
         </table>
 
-        <form v-if="writable" id="changePropertyForm" class="form" :action="changeUrl" method="post">
-            <div class="form-group">
-                <div v-if="type == 'boolean'" class="radio">
-                    <label>
-                        <input v-if="value.originValue" v-model="changePropertyFormState.newValue" class="radio-inline" type="radio" value="true" checked="checked">true</input>
-                        <input v-else v-model="changePropertyFormState.newValue" class="radio-inline" type="radio" value="true">true</input>
-                    </label>
-                    <label>
-                        <input v-if="value.originValue" v-model="changePropertyFormState.newValue" class="radio-inline" type="radio" value="false">false</input>
-                        <input v-else v-model="changePropertyFormState.newValue" class="radio-inline" type="radio" value="false" checked="checked">false</input>
-                    </label>
-                    <!--<label>
-                        <input v-model="changePropertyFormState.newValue" type="radio" value="true" name="newValue" class="radio-inline">true</input>
-                    </label>
-                    <label>
-                        <input v-model="changePropertyFormState.newValue" type="radio" value="false" name="newValue" class="radio-inline">false</input>
-                    </label>-->
-                </div>
-                <textarea v-else class="form-control" rows="5" v-model="changePropertyFormState.newValue" name="newValue"></textarea>
-            </div>
-            <div class="form-group">
-                <input @click="changeProp" class="btn btn-default" type="button" value="Change"/>
-            </div>
-            <p class="errorMsg bg-warning">{{changePropertyFormState.changeResult}}</p>
-
-<!--            <input type="hidden" v-model="changePropertyFormState.name" name="propertyName"/>
-            <input type="hidden" v-model="changePropertyFormState.beanName" name="beanName"/>
-            <input type="hidden" v-model="changePropertyFormState.contextId" name="contextId"/>-->
-        </form>
+        <property-change-form :changeUrl="changeUrl" :value="value" :propertyName="propertyName" :beanName="beanName" :contextId="contextId"/>
     </div>
 </div>
 </script>
@@ -90,14 +94,9 @@
         writable: ${writable},
         source: ${source},
         changeUrl: "${changeUrl}",
-        changePropertyFormState: {
-            propertyName: "${name}",
-            beanName: "${beanName}",
-            contextId: "${contextId}",
-            originValue: ${value.originValue},
-            newValue: ${value.originValue},
-            changeResult: null,
-        }
+        propertyName: "${name}",
+        beanName: "${beanName}",
+        contextId: "${contextId}"
     };
 </script>
 

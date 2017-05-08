@@ -1,15 +1,16 @@
 package my.mbean.util;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import my.mbean.util.json.JsonUtil;
+import my.mbean.view.NonRecursivePropertyPlaceholderHelper;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.springframework.aop.TargetClassAware;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.aop.target.SingletonTargetSource;
 import org.springframework.beans.BeanUtils;
+import org.springframework.boot.autoconfigure.web.ErrorMvcAutoConfiguration;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.PropertyPlaceholderHelper;
 import org.springframework.util.StringUtils;
 
 import java.beans.PropertyDescriptor;
@@ -18,9 +19,38 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public class Utils {
+    /**
+     * 渲染html模板.
+     *
+     * @param pHtmlTemplate html 模板
+     * @param pModel        渲染数据
+     * @return 渲染后的html String.
+     */
+    public static String render(String pHtmlTemplate, final Map pModel) {
+//        NonRecursivePropertyPlaceholderHelper helper = new NonRecursivePropertyPlaceholderHelper("${", "}");
+        PropertyPlaceholderHelper placeholderHelper = new PropertyPlaceholderHelper("${", "}");
+//        PropertyPlaceholderHelper.PlaceholderResolver resolver = new NonRecursivePropertyPlaceholderHelper.ExpressionResolver(getExpressions(), map);
+        String result = placeholderHelper.replacePlaceholders(pHtmlTemplate, new PropertyPlaceholderHelper.PlaceholderResolver() {
+            @Override
+            public String resolvePlaceholder(String placeholderName) {
+                return String.valueOf(pModel.get(placeholderName));
+            }
+        });
+        return result;
+    }
+
+    /**
+     * 得到一个class的所有Field, 包括父级.
+     * @param cls
+     * @return
+     */
     public static List<Field> getAllFieldsList(Class<?> cls) {
         if (cls == null) return Collections.emptyList();
         ArrayList allFields = new ArrayList();
@@ -40,13 +70,7 @@ public class Utils {
     }
 
     public static String toJsonStr(Object pObj) {
-        ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(Include.NON_NULL);
-        try {
-            return mapper.writeValueAsString(pObj);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return JsonUtil.get().toJson(pObj);
     }
 
 
@@ -75,7 +99,6 @@ public class Utils {
 
     public static String buildClassPath(Class<?> pCls, String pSuffix) {
         StringBuilder sb = new StringBuilder("classpath:/");
-        System.out.println(pCls.getPackage().getName());
         for (String name : pCls.getPackage().getName().split("\\.")) {
             sb.append(name).append("/");
         }
