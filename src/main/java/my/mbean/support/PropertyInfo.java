@@ -5,6 +5,7 @@ import java.util.Objects;
 
 /**
  * common property info.
+ *
  * @author hubert
  */
 public class PropertyInfo {
@@ -29,10 +30,13 @@ public class PropertyInfo {
      */
     private List<String>   annotationMarks;
     /**
+     * property has some tag, e.g: final.
+     */
+    private List<String>   tags;
+    /**
      * property source.
      */
     private PropertySource source;
-
 
 
     @Override
@@ -51,14 +55,12 @@ public class PropertyInfo {
     }
 
 
-
     /**
      * @return the name
      */
     public String getName() {
         return name;
     }
-
 
 
     /**
@@ -69,7 +71,6 @@ public class PropertyInfo {
     }
 
 
-
     /**
      * @return the url
      */
@@ -78,35 +79,28 @@ public class PropertyInfo {
     }
 
 
-
     /**
-     * @param pName
-     *            the name to set
+     * @param pName the name to set
      */
     public void setName(String pName) {
         name = pName;
     }
 
 
-
     /**
-     * @param pType
-     *            the type to set
+     * @param pType the type to set
      */
     public void setType(String pType) {
         type = pType;
     }
 
 
-
     /**
-     * @param pUrl
-     *            the url to set
+     * @param pUrl the url to set
      */
     public void setUrl(String pUrl) {
         url = pUrl;
     }
-
 
 
     /**
@@ -117,15 +111,12 @@ public class PropertyInfo {
     }
 
 
-
     /**
-     * @param pValue
-     *            the value to set
+     * @param pValue the value to set
      */
     public void setValue(Object pValue) {
         value = pValue;
     }
-
 
 
     /**
@@ -136,15 +127,12 @@ public class PropertyInfo {
     }
 
 
-
     /**
-     * @param pSource
-     *            the source to set
+     * @param pSource the source to set
      */
     public void setSource(PropertySource pSource) {
         source = pSource;
     }
-
 
 
     /**
@@ -155,13 +143,18 @@ public class PropertyInfo {
     }
 
 
-
     /**
-     * @param pAnnotationMarks
-     *            the annotationMarks to set
+     * @param pAnnotationMarks the annotationMarks to set
      */
     public void setAnnotationMarks(List<String> pAnnotationMarks) {
         annotationMarks = pAnnotationMarks;
     }
 
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
 }

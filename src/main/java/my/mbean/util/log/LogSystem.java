@@ -37,14 +37,14 @@ public abstract class LogSystem {
 
     static {
         Map<String, String> systems = new LinkedHashMap<String, String>();
-//        systems.put("ch.qos.logback.core.Appender",
-//                "org.springframework.boot.logging.logback.LogbackLogSystem");
-        systems.put("org.apache.log4j.LogManager",
-                "my.mbean.util.log.Log4JLogSystem");
+        systems.put("ch.qos.logback.core.Appender",
+                "my.mbean.util.log.LogbackLogSystem");
+//        systems.put("org.apache.log4j.LogManager",
+//                "my.mbean.util.log.Log4JLogSystem");
         systems.put("org.apache.logging.log4j.core.impl.Log4jContextFactory",
                 "my.mbean.util.log.Log4J2LogSystem");
-        systems.put("java.util.logging.LogManager",
-                "org.springframework.boot.logging.java.JavaLogSystem");
+//        systems.put("java.util.logging.LogManager",
+//                "org.springframework.boot.logging.java.JavaLogSystem");
         SYSTEMS = Collections.unmodifiableMap(systems);
     }
 

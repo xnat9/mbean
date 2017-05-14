@@ -7,11 +7,11 @@ Vue.component('prop-value', function(resolve, reject) {
 	});
 });
 Vue.component('property-change-form', {
-    props: ['changeUrl'],
+    props: ['changeUrl', 'type', 'writable', 'value', 'contextId', 'propertyName', 'beanName'],
     template: '#property-change-form-template',
     data: function() {
         var newValue = null;
-        if (this.value.type == 'boolean') {
+        if (this.type == 'boolean') {
             newValue = this.value.originValue;
         }
         return {
@@ -26,24 +26,24 @@ Vue.component('property-change-form', {
             return {
                 contextId: this.contextId,
                 propertyName: this.propertyName,
-                beanName: this.beanName
+                beanName: this.beanName,
                 newValue: this.formState.newValue
             }
         },
         submit: function() {
-            var formState = this.changePropertyFormState;
-            // console.log("changePropertyFormState: ", this.changePropertyFormState);
+            var formState = this.formState;
+            var submitData = this.buildSubmitData();
             $.post({
                 url: this.changeUrl,
-                data: this.changePropertyFormState,
+                data: submitData,
                 dataType: 'json',
                 success: function(resp) {
+//                    console.log('resp: ', resp);
                     if (resp.success) {
                         window.location.reload();
                     } else {
                         formState.changeResult = resp.errorMsg;
                     }
-                    // console.log('resp: ', resp);
                 }
             });
         }

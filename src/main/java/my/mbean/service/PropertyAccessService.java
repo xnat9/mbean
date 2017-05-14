@@ -4,15 +4,16 @@ import my.mbean.spring.GenericService;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.PropertyAccessor;
 import org.springframework.beans.PropertyEditorRegistrySupport;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.propertyeditors.*;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceArrayPropertyEditor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
 import org.xml.sax.InputSource;
 
+import javax.annotation.Resource;
 import java.beans.PropertyEditor;
 import java.io.File;
 import java.io.InputStream;
@@ -112,11 +113,10 @@ public class PropertyAccessService extends GenericService {
     protected PropertyAccessor forBeanPropertyAccessor(Object pTarget) {
         BeanWrapperImpl beanWrapper = new BeanWrapperImpl(pTarget) {
             @Override
-            public PropertyEditor findCustomEditor(Class<?> pRequiredType, String pPropertyPath) {
-                return super.findCustomEditor(pRequiredType, pPropertyPath);
-            }
-            @Override
             public PropertyEditor getDefaultEditor(Class<?> pRequiredType) {
+                //use BeanFactory's PropertyEditors.
+//                ((ConfigurableBeanFactory) getApplicationContext().getAutowireCapableBeanFactory()).copyRegisteredEditorsTo(this);
+//                return super.getDefaultEditor(pRequiredType);
                 return createPropertyEditor(pRequiredType);
             }
         };

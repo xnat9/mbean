@@ -1,28 +1,104 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="admin/beans/fragments :: head (title='method view page')"></head>
-<body th:inline="text">
+<html>
+<head>
+	<title>Method View: ${beanName}, ${name}</title>
+	<link rel="stylesheet" type="text/css" href="${staticUrlPrefix}/css/bootstrap.min.css"/>
+</head>
+<body>
+<div id="app">
+	<app />
+</div>
+
+<script type="text/x-template" id="app-template">
 <div class="container">
 	<div class="row">
-	    <div class="well">
-	       bean name: <a th:href="${beanUrl}" th:text="${beanName}"></a><br/>
-	       bean class: <span th:text="${beanClassName}"></span>
-	    </div>
+		<div class="well">
+			bean name: <a :href="beanUrl">{{beanName}}</a><br/>
+			bean class: <span>{{beanClassName}}</span>
+		</div>
 	</div>
-	
-	
-	<div class="row">
-	    <h2>Invoke Method <i th:text="${name}"></i>?</h2>
-	    <form id="beanMethodInvokeForm" class="form" th:action="${invokeUrl}" method="post">
-	        <input class="btn btn-default" type="submit" value="Invoke" />
-	        <p class="errorMsg bg-warning"></p>
-	        <p class="successMsg bg-success"></p>
 
-	        <input type="hidden" th:value="${name}" name="methodName"/>
-	        <input type="hidden" th:value="${beanName}" name="beanName"/>
-	        <input type="hidden" th:value="${contextId}" name="contextId"/>
-	    </form>
+	<div class="row">
+		<h2>Invoke Method <i>{{name}}</i>?</h2>
+		<method-invoke-form :invokeUrl="invokeUrl" :methodName="name" :beanName="beanName" :contextId="contextId"/>
 	</div>
 </div>
+</script>
+
+<script type="text/x-template" id="method-invoke-form-template">
+<form id="methodInvokeForm" class="form" method="post">
+	<input @click="submit" class="btn btn-default" type="button" value="Invoke" />
+	<p v-show="!formState.success && formState.errorMsg" class="errorMsg bg-warning">{{formState.errorMsg}}</p>
+	<p v-show="formState.success && !formState.errorMsg" class="successMsg bg-success">SUCCESS</p>
+</form>
+</script>
+
+<script src="${staticUrlPrefix}/js/vue.js"></script>
+<script src="${staticUrlPrefix}/js/jquery-3.1.1.min.js"></script>
+
+<script type="text/javascript">
+var staticUrlPrefix = "${staticUrlPrefix}";
+var initState = {
+	name: "${name}",
+	beanName: "${beanName}",
+	contextId: "${contextId}",
+	invokeUrl: "${invokeUrl}",
+	beanClassName: "${beanClassName}",
+	beanUrl: "${beanUrl}",
+};
+</script>
+<script type="text/javascript">
+Vue.component('method-invoke-form', {
+	props: ['invokeUrl', 'contextId', 'methodName', 'beanName'],
+	template: '#method-invoke-form-template',
+	data: function() {
+		return {
+            formState: {
+				//invokeCount: 0,
+				success: null,
+				errorMsg: null,
+			}
+        };
+	},
+	methods: {
+		buildSubmitData: function() {
+            return {
+                contextId: this.contextId,
+                methodName: this.methodName,
+                beanName: this.beanName,
+            }
+        },
+		preSubmit: function () {
+			this.formState.errorMsg = null;
+			this.formState.success = null;
+        },
+        submit: function() {
+            this.preSubmit();
+        	var formState = this.formState;
+            var submitData = this.buildSubmitData();
+            $.post({
+                url: this.invokeUrl,
+                data: submitData,
+                dataType: 'json',
+                success: function(resp) {
+//                    console.log('resp: ', resp);
+                     formState.errorMsg = resp.errorMsg;
+                     formState.success = resp.success;
+                }
+            });
+        }
+	}
+});
+var app = new Vue({
+    el: '#app',
+    template: '#app-template',
+    data: function() {
+        if (initState) return initState;
+        else return testState;
+        //return testState;
+    }
+});
+
+</script>
 </body>
 </html>

@@ -310,14 +310,22 @@ public class GenericBeanVOBuilder extends BeanVOBuilder<BeanVO> {
             // AnnotationUtils.getAnnotationAttributes(anno)
             annotationMarks.add("@" + anno.annotationType().getSimpleName());
         }
+        if (Utils.isEmpty(annotationMarks)) return null;
         Collections.sort(annotationMarks, ANNOTATION_COMPARATOR);
         return annotationMarks;
     }
 
 
-    protected List<String> popluateAnnotationMarks(String pBeanName, PropertyDescriptor pPd, ConfigurableApplicationContext pContext) {
-        // TODO Auto-generated method stub
-        return null;
+    protected List<String> popluateAnnotationMarks(String pBeanName, PropertyDescriptor pPropertyDescriptor, ConfigurableApplicationContext pContext) {
+        Annotation[] annotations = pPropertyDescriptor.getReadMethod().getAnnotations();
+        List<String> annotationMarks = new ArrayList<>(annotations.length);
+        for (Annotation anno : annotations) {
+            if (isIgnoreAnnotation(anno)) continue;
+            annotationMarks.add("@" + anno.annotationType().getSimpleName());
+        }
+        if (Utils.isEmpty(annotationMarks)) return null;
+        Collections.sort(annotationMarks, ANNOTATION_COMPARATOR);
+        return annotationMarks;
     }
 
 

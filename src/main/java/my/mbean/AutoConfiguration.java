@@ -1,26 +1,18 @@
 package my.mbean;
 
 import my.mbean.service.BeansService;
+import my.mbean.spring.condition.ConditionalOnClass;
 import my.mbean.support.ConfigurationBeanVOBuilder;
 import my.mbean.support.GenericBeanVOBuilder;
 import my.mbean.support.GenericPropertyVOBuilder;
+import my.mbean.spring.condition.OnClassCondition;
 import my.mbean.util.log.LogSystem;
 import my.mbean.web.MBeanController;
 import my.mbean.web.MBeanServlet;
 import my.mbean.web.RequestDispatcher;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Primary;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.WebApplicationContext;
-
-import javax.servlet.*;
-import javax.servlet.annotation.WebListener;
+import org.springframework.context.annotation.*;
 
 @Configuration
 //@EnableWebMvc
@@ -110,6 +102,7 @@ public class AutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnClass(ServletRegistrationBean.class)
     public ServletRegistrationBean mbeanServletRegistrationBean() {
         ServletRegistrationBean registrationBean = new ServletRegistrationBean();
         MBeanConfiguration mBeanConfiguration = mBeanConfiguration();

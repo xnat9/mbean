@@ -3,6 +3,7 @@ package my.mbean.util.log;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,5 +36,10 @@ public class Log4JLogSystem extends LogSystem {
         if (logger != null) {
             logger.setLevel(level);
         }
+        getLoggerContext().updateLoggers();
+    }
+
+    private LoggerContext getLoggerContext() {
+        return (LoggerContext) org.apache.logging.log4j.LogManager.getContext(false);
     }
 }

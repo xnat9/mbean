@@ -1,8 +1,6 @@
 package my.mbean.service;
 
 import my.mbean.MBeanConfiguration;
-import my.mbean.web.MBeanController;
-import my.mbean.web.MBeanServlet;
 import my.mbean.spring.BaseBean;
 import my.mbean.spring.GenericService;
 import my.mbean.support.BeanVOBuilder;
@@ -13,6 +11,7 @@ import my.mbean.support.ValueWrapper.BeanRef;
 import my.mbean.util.Msg;
 import my.mbean.util.Response;
 import my.mbean.util.Utils;
+import my.mbean.web.MBeanController;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -27,15 +26,12 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -57,19 +53,18 @@ public class BeansService extends GenericService {
      * search limit bean count.
      */
     private Integer searchBeanLimitCount = Integer.valueOf(30);
-    private List<Class<?>> typeList;
+    private List<Class<?>>                typeList;
     // TODO not need?
-    private List<Class<?>> additionalTypeList;
-
+    private List<Class<?>>                additionalTypeList;
     /**
      * 找定某个bean 用某个builder. map(beanName, BeanVOBuilder).
      */
     private Map<String, BeanVOBuilder<?>> beanVOBuilders;
-    private PropertyVOBuilder<?> propertyVOBuilder;
+    private PropertyVOBuilder<?>          propertyVOBuilder;
     @Autowired
-    PropertyAccessService propertyAccessService;
+    private PropertyAccessService         propertyAccessService;
     @Autowired
-    MBeanConfiguration mBeanConfiguration;
+    private MBeanConfiguration            mBeanConfiguration;
 
 
     @Override
@@ -198,12 +193,12 @@ public class BeansService extends GenericService {
     public Response changeProperty(String pPropName, String pBeanName, String pContextId, String pNewValue) {
         Response result = new Response(Boolean.FALSE);
         ConfigurableApplicationContext context = getContext(pContextId);
-        Object beanInstance = context.getBean(pBeanName);
-        if (beanInstance == null) {
-            result.setErrorMsg(Msg.format("not found instance for bean: {0}", pBeanName));
-            return result;
-        }
         try {
+            Object beanInstance = context.getBean(pBeanName);
+            if (beanInstance == null) {
+                result.setErrorMsg("not found instance for bean: " + pBeanName);
+                return result;
+            }
             propertyAccessService.setProperty(beanInstance, pPropName, pNewValue);
             result.setSuccess(Boolean.TRUE);
             //clear cache. 用事件来做.
@@ -510,7 +505,13 @@ public class BeansService extends GenericService {
 
 
     public String getHtmlTemplate(String pTemplateName) {
-        String htmlTemplate = Utils.toString(MBeanConfiguration.class.getResourceAsStream("view/resource/" + pTemplateName + ".html"));
+        Resource resource = getApplicationContext().getResource(mBeanConfiguration.getInternalStaticResourcePathPrefix() + pTemplateName + ".html");
+        String htmlTemplate = "";
+        try {
+            htmlTemplate = Utils.toString(resource.getInputStream());
+        } catch (Exception e) {
+            log.error(e, "get html resource error, resource name: {0}", pTemplateName);
+        }
         return htmlTemplate;
     }
 

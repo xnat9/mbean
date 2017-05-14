@@ -1,6 +1,7 @@
 package my.mbean;
 
 import my.mbean.spring.GenericService;
+import my.mbean.util.Utils;
 import my.mbean.web.MBeanController;
 import my.mbean.web.RequestDispatcher;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,26 +27,30 @@ public class MBeanConfiguration extends GenericService {
     public static final String URL_BEAN_INVOKE = "/beans/invoke";
 
     @Value(MBEAN_URL_PREFIX_EXPR)
-    private String mbeanUrlPrefix;
-    private String beansUrlPrefix;
-    private String propertyChangeUrl;
-    private String methodInvokeUrl;
-    private String staticResourceUrlPrefix;
+    private String              mbeanUrlPrefix;
+    private String              beansUrlPrefix;
+    private String              propertyChangeUrl;
+    private String              methodInvokeUrl;
+    /**
+     * 浏览器访问静态资源url前缀.
+     */
+    private String              staticResourceUrlPrefix;
+    /**
+     * 内部静态资源的路径前缀. staticResourceUrlPrefix 属性映射到内部资源的路径.
+     */
+    private String              internalStaticResourcePathPrefix;
     /**
      * map<beanName, view>
      */
     private Map<String, String> beanViewMap;
-
-    private UrlPathHelper urlPathHelper;
-    private PathMatcher pathMatcher;
-//    @Resource
-//    private StringValueResolver embeddedValueResolver;
+    private UrlPathHelper       urlPathHelper;
+    private PathMatcher         pathMatcher;
     @Resource
     @Lazy
-    private MBeanController mbeanController;
+    private MBeanController     mbeanController;
     @Resource
     @Lazy
-    private RequestDispatcher requestDispatcher;
+    private RequestDispatcher   requestDispatcher;
 
 
     @Override
@@ -55,7 +60,8 @@ public class MBeanConfiguration extends GenericService {
         beansUrlPrefix = servletContextPath + mbeanUrlPrefix + "/beans";
         propertyChangeUrl = servletContextPath + mbeanUrlPrefix + URL_BEAN_CHANGE;
         methodInvokeUrl = servletContextPath + mbeanUrlPrefix + URL_BEAN_INVOKE;
-        staticResourceUrlPrefix = servletContextPath + mbeanUrlPrefix + "/static/resource";
+        staticResourceUrlPrefix = servletContextPath + mbeanUrlPrefix + "/static";
+        internalStaticResourcePathPrefix = Utils.buildClassPath(getClass(), "view/resource/");
 
         urlPathHelper = new UrlPathHelper();
         pathMatcher = new AntPathMatcher();
@@ -108,5 +114,9 @@ public class MBeanConfiguration extends GenericService {
 
     public String getStaticResourceUrlPrefix() {
         return staticResourceUrlPrefix;
+    }
+
+    public String getInternalStaticResourcePathPrefix() {
+        return internalStaticResourcePathPrefix;
     }
 }
