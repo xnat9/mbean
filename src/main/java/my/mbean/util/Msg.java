@@ -1,15 +1,13 @@
 package my.mbean.util;
 
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.text.StrBuilder;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.commons.lang3.text.StrBuilder;
 
 /**
  * common util for Msg.
@@ -32,7 +30,7 @@ public class Msg {
      * @return formatted String.
      */
     public static String format(String pFormat, Object... pArgs) {
-        if (ArrayUtils.isEmpty(pArgs)) {
+        if (Utils.isEmpty(pArgs)) {
             return pFormat;
         }
         Matcher matcher = paramPattern.matcher(pFormat);
@@ -51,7 +49,7 @@ public class Msg {
         while (matcher.find()) {
             Object indexMappedObject = null;
             try {
-                int index = NumberUtils.toInt(matcher.group(2), -1);
+                int index = Utils.toInt(matcher.group(2), -1);
                 if (index < 0) {
                     continue;
                 }

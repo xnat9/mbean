@@ -24,7 +24,7 @@
   </ol>
 
   <!-- bean reference value-->
-  <a v-else-if="value.beanRef && value.beanRef.ref" :href="value.beanRef.beanUrl">{{value.beanRef.beanName}}</a>
+  <a v-else-if="value.beanRef" :href="value.beanRef.beanUrl">{{value.beanRef.beanName}}</a>
 
   <!-- number or boolean origin value -->
   <!-- note: 当boolean 值为false的时候不会不这里-->

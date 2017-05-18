@@ -24,7 +24,9 @@ public abstract class LogSystem {
     public LogSystem(ClassLoader classLoader) {
         this.classLoader = classLoader;
     }
-    public LogSystem() {}
+
+    public LogSystem() {
+    }
 
     /**
      * The name used for the root logger. LogSystem implementations should ensure that
@@ -39,28 +41,31 @@ public abstract class LogSystem {
         Map<String, String> systems = new LinkedHashMap<String, String>();
         systems.put("ch.qos.logback.core.Appender",
                 "my.mbean.util.log.LogbackLogSystem");
-//        systems.put("org.apache.log4j.LogManager",
-//                "my.mbean.util.log.Log4JLogSystem");
         systems.put("org.apache.logging.log4j.core.impl.Log4jContextFactory",
                 "my.mbean.util.log.Log4J2LogSystem");
 //        systems.put("java.util.logging.LogManager",
 //                "org.springframework.boot.logging.java.JavaLogSystem");
+        systems.put("org.apache.log4j.LogManager",
+                "my.mbean.util.log.Log4JLogSystem");
         SYSTEMS = Collections.unmodifiableMap(systems);
     }
 
 
     /**
      * Sets the logging level for a given logger.
+     *
      * @param loggerName the name of the logger to set ({@code null} can be used for the
-     * root logger).
-     * @param level the log level
+     *                   root logger).
+     * @param level      the log level
      */
     public void setLogLevel(String loggerName, LogLevel level) {
         throw new UnsupportedOperationException("Unable to set log level");
     }
+
     /**
      * Returns a set of the {@link LogLevel LogLevels} that are actually supported by the
      * logging system.
+     *
      * @return the supported levels
      */
     public Set<LogLevel> getSupportedLogLevels() {
@@ -70,6 +75,7 @@ public abstract class LogSystem {
 
     /**
      * Detect and return the logging system in use. Supports Logback and Java Logging.
+     *
      * @param classLoader the classloader
      * @return The logging system
      */
@@ -94,8 +100,7 @@ public abstract class LogSystem {
             Class<?> systemClass = ClassUtils.forName(LogSystemClass, classLoader);
             return (LogSystem) systemClass.getConstructor(ClassLoader.class)
                     .newInstance(classLoader);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -107,7 +112,10 @@ public abstract class LogSystem {
         public NoOpLogSystem(ClassLoader pClassLoader) {
             super(pClassLoader);
         }
-        public NoOpLogSystem() {}
+
+        public NoOpLogSystem() {
+        }
+
         @Override
         public void setLogLevel(String loggerName, LogLevel level) {
 

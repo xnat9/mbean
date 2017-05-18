@@ -24,7 +24,8 @@ public class MBeanServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
+//        WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
+        WebApplicationContext context = WebApplicationContextUtils.findWebApplicationContext(getServletContext());
         mBeanConfiguration = context.getBean(MBeanConfiguration.class);
         log("init....");
     }

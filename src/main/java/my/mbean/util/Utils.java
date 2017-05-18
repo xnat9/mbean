@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -195,6 +196,16 @@ public class Utils {
         }.toString();
     }
 
+    public static int toInt(final String str, final int defaultValue) {
+        if(str == null) {
+            return defaultValue;
+        }
+        try {
+            return Integer.parseInt(str);
+        } catch (final NumberFormatException nfe) {
+            return defaultValue;
+        }
+    }
 
     public static boolean isBlank(final CharSequence cs) {
         return !StringUtils.hasText(cs);
@@ -251,7 +262,7 @@ public class Utils {
 
 
     public static boolean isEmpty(Object[] array) {
-        return (array == null || array.length == 0);
+        return (array == null || Array.getLength(array) == 0);
     }
 
 

@@ -5,14 +5,16 @@ import my.mbean.spring.condition.ConditionalOnClass;
 import my.mbean.support.ConfigurationBeanVOBuilder;
 import my.mbean.support.GenericBeanVOBuilder;
 import my.mbean.support.GenericPropertyVOBuilder;
-import my.mbean.spring.condition.OnClassCondition;
 import my.mbean.util.log.LogSystem;
 import my.mbean.web.MBeanController;
 import my.mbean.web.MBeanServlet;
 import my.mbean.web.RequestDispatcher;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 //@EnableWebMvc
@@ -64,7 +66,15 @@ public class AutoConfiguration {
 //            }
 //        };
 //    }
-
+//    public class MBeanServletRegistrar implements WebApplicationInitializer {
+//        @Override
+//        public void onStartup(ServletContext pServletContext) throws ServletException {
+//            MBeanServlet mbeanServlet = new MBeanServlet();
+//            ServletRegistration.Dynamic registration = pServletContext.addServlet(MBEAN_SERVLET_NAME, mbeanServlet);
+//            MBeanConfiguration mBeanConfiguration = mBeanConfiguration();
+//            registration.addMapping(mBeanConfiguration.getMbeanUrlPrefix() + "/*");
+//        }
+//    }
 //    @WebListener
 //    class MbeanServletRegistion implements ServletContextListener {
 //
@@ -101,16 +111,19 @@ public class AutoConfiguration {
         return new RequestDispatcher();
     }
 
-    @Bean
+
     @ConditionalOnClass(ServletRegistrationBean.class)
-    public ServletRegistrationBean mbeanServletRegistrationBean() {
-        ServletRegistrationBean registrationBean = new ServletRegistrationBean();
-        MBeanConfiguration mBeanConfiguration = mBeanConfiguration();
-        MBeanServlet mbeanServlet = new MBeanServlet();
-        registrationBean.setServlet(mbeanServlet);
-        registrationBean.setName(MBEAN_SERVLET_NAME);
-        registrationBean.addUrlMappings(mBeanConfiguration.getMbeanUrlPrefix() + "/*");
-        return registrationBean;
+    class MBeanServletRegistrar {
+        @Bean
+        public ServletRegistrationBean mbeanServletRegistrationBean() {
+            ServletRegistrationBean registrationBean = new ServletRegistrationBean();
+            MBeanConfiguration mBeanConfiguration = mBeanConfiguration();
+            MBeanServlet mbeanServlet = new MBeanServlet();
+            registrationBean.setServlet(mbeanServlet);
+            registrationBean.setName(MBEAN_SERVLET_NAME);
+            registrationBean.addUrlMappings(mBeanConfiguration.getMbeanUrlPrefix() + "/*");
+            return registrationBean;
+        }
     }
 
 
