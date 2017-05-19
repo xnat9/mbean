@@ -1,7 +1,5 @@
 package my.mbean.util;
 
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang3.text.StrBuilder;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -38,7 +36,7 @@ public class Msg {
         if (!matcher.find()) {
             return MessageFormat.format(pFormat, pArgs);
         }
-        StrBuilder sb = new StrBuilder(pFormat);
+        StringBuilder sb = new StringBuilder(pFormat);
         matcher = paramPattern.matcher(sb);
         List<Object> args = new ArrayList<>(pArgs.length + 2);
         // "{0.name}" regex resolve:
@@ -61,7 +59,8 @@ public class Msg {
             }
             args.add(indexMappedObject);
             // change "0.name" to "0".
-            sb = sb.replaceFirst(matcher.group(1), String.valueOf(count));
+            sb = new StringBuilder(sb.toString().replaceFirst(matcher.group(1), String.valueOf(count)));
+//            sb = sb.replaceFirst(matcher.group(1), String.valueOf(count));
             matcher = paramPattern.matcher(sb);
             count++;
         }
@@ -74,7 +73,7 @@ public class Msg {
         try {
 //            BeanWrapper beanWrapper = new BeanWrapperImpl(pInst);
 //            return beanWrapper.getPropertyValue(pPropEl);
-            return PropertyUtils.getProperty(pInst, pPropEl);
+            return PropertyUtil.getProperty(pInst, pPropEl);
         } catch (Exception e) {
         }
 
