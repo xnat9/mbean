@@ -4,9 +4,8 @@ import my.mbean.spring.GenericService;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.PropertyAccessor;
 import org.springframework.beans.PropertyEditorRegistrySupport;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.propertyeditors.*;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.io.support.ResourceArrayPropertyEditor;
 import org.springframework.stereotype.Service;
@@ -44,10 +43,6 @@ public class PropertyAccessService extends GenericService {
             zoneIdClass = null;
         }
     }
-    @javax.annotation.Resource
-    @Lazy
-    private ConversionService conversionService;
-
 
     @Override
     protected void doStartService() {
@@ -120,6 +115,7 @@ public class PropertyAccessService extends GenericService {
                 return createPropertyEditor(pRequiredType);
             }
         };
+        ConversionService conversionService = ((ConfigurableApplicationContext) getApplicationContext()).getBeanFactory().getConversionService();
         beanWrapper.setConversionService(conversionService);
         return beanWrapper;
     }
