@@ -18,11 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Utils {
     /**
@@ -33,13 +29,13 @@ public class Utils {
      * @return 渲染后的html String.
      */
     public static String render(String pHtmlTemplate, final Map pModel) {
-//        NonRecursivePropertyPlaceholderHelper helper = new NonRecursivePropertyPlaceholderHelper("${", "}");
-        PropertyPlaceholderHelper placeholderHelper = new PropertyPlaceholderHelper("${", "}");
-//        PropertyPlaceholderHelper.PlaceholderResolver resolver = new NonRecursivePropertyPlaceholderHelper.ExpressionResolver(getExpressions(), map);
+        // 自定义一个属性替代类是因为, 如果有个属性的值是个String 值为: "${", 那么其 originValue="${",
+        // org.springframework.util.PropertyPlaceholderHelper 这个属性替代器会对这个originValue 做解析(它会一直匹配到后面的 "}"), 这里不应该对属性值做解析.
+        SimplePropertyPlaceholderHelper placeholderHelper = new SimplePropertyPlaceholderHelper("${", "}");
         String result = placeholderHelper.replacePlaceholders(pHtmlTemplate, new PropertyPlaceholderHelper.PlaceholderResolver() {
             @Override
             public String resolvePlaceholder(String placeholderName) {
-                return String.valueOf(pModel.get(placeholderName));
+                return Objects.toString(pModel.get(placeholderName), "");
             }
         });
         return result;

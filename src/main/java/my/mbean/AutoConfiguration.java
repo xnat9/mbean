@@ -153,18 +153,16 @@ public class AutoConfiguration {
     }
 
 
-    @Bean
-    @Lazy
-        // @ConfigurationProperties(prefix = CONFIG_PREFIX_ACTUATOR_ADMIN_BEANS +
-        // ".beanview.builder.configuration")
-    ConfigurationBeanVOBuilder configurationBeanVOBuilder(final ApplicationContext pContext) {
-        return new ConfigurationBeanVOBuilder() {
-            @Override
-            public String[] getIds() {
-                return pContext.getBeanNamesForAnnotation(Configuration.class);
-            }
-        };
-    }
+//    @Bean
+//    @Lazy
+//    ConfigurationBeanVOBuilder configurationBeanVOBuilder(final ApplicationContext pContext) {
+//        return new ConfigurationBeanVOBuilder() {
+//            @Override
+//            public String[] getIds() {
+//                return pContext.getBeanNamesForAnnotation(Configuration.class);
+//            }
+//        };
+//    }
 
 
     @Bean

@@ -129,7 +129,7 @@ public class GenericBeanVOBuilder extends BeanVOBuilder<BeanVO> {
             return null;
         }
         ConfigurableApplicationContext context = beansService.getContext(pContextId);
-        //get from cache.
+        //TODO get from cache.
         List<PropertyInfo> properties = null;
         properties = buildProperties(pBeanName, context);
         return properties;
