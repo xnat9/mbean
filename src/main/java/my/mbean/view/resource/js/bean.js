@@ -28,7 +28,7 @@ Vue.component('prop-value', function(resolve, reject) {
 	$.get(staticUrlPrefix + "/template/property-value.html").then(function (resp) {
 		resolve({
 			props: ['value'],
-			template: resp
+			template: resp,
 		})
 	});
 });
