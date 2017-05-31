@@ -10,23 +10,21 @@ import my.mbean.util.Utils;
  */
 public class ValueWrapper implements Serializable {
     private static final long  serialVersionUID = 1L;
-    public static final String VALUE_TYPE_MAP   = "map";
-    public static final String VALUE_TYPE_LIST  = "list";
-    public static final String VALUE_TYPE_ARRAY = "array";
-    public static final String VALUE_TYPE_SIMPLE = "simple";
+    public static final String VALUE_SHOW_TYPE_MAP   = "map";
+    public static final String VALUE_SHOW_TYPE_LIST  = "list";
     /**
      * value tip.
      */
-    private String             tip = "";
+    private String             tip;
     /**
      * list/array/map or other custom value.
      * 对象被解析后, 可以表示为一个list, array, map 对象.
      */
     private Object             value;
     /**
-     * list, array or map.
+     * list or map.
      */
-    private String             type;
+    private String             showType;
     /**
      * origin value.
      */
@@ -67,6 +65,18 @@ public class ValueWrapper implements Serializable {
         }
     }
 
+
+
+    public static class ValueDescriptor extends BeanRef {
+        public ValueDescriptor(String pToString) {
+            super(pToString);
+        }
+
+        public ValueDescriptor() {
+        }
+    }
+
+
     public static class BeanRef implements Serializable {
         private static final long serialVersionUID = 1L;
         /**
@@ -93,8 +103,6 @@ public class ValueWrapper implements Serializable {
         public BeanRef() {
         }
 
-
-
         @Override
         public String toString() {
             return Utils.toString(this);
@@ -107,60 +115,31 @@ public class ValueWrapper implements Serializable {
         }
 
 
-
-        /**
-         * @return the beanName
-         */
         public String getBeanName() {
             return beanName;
         }
 
+        public BeanRef setBeanName(String beanName) {
+            this.beanName = beanName;
+            return this;
+        }
 
-
-        /**
-         * @return the beanUrl
-         */
         public String getBeanUrl() {
             return beanUrl;
         }
 
-
-
-        /**
-         * @param pBeanName
-         *            the beanName to set
-         */
-        public void setBeanName(String pBeanName) {
-            beanName = pBeanName;
+        public BeanRef setBeanUrl(String beanUrl) {
+            this.beanUrl = beanUrl;
+            return this;
         }
 
-
-
-        /**
-         * @param pBeanUrl
-         *            the beanUrl to set
-         */
-        public void setBeanUrl(String pBeanUrl) {
-            beanUrl = pBeanUrl;
-        }
-
-
-
-        /**
-         * @return the toString
-         */
         public String getToString() {
             return toString;
         }
 
-
-
-        /**
-         * @param pToString
-         *            the toString to set
-         */
-        public void setToString(String pToString) {
-            toString = pToString;
+        public BeanRef setToString(String toString) {
+            this.toString = toString;
+            return this;
         }
     }
 
@@ -171,118 +150,57 @@ public class ValueWrapper implements Serializable {
         return Utils.toString(this);
     }
 
-
-
-    /**
-     * @return the toString
-     */
-    public String getToString() {
-        return toString;
-    }
-
-
-
-    /**
-     * @param pToString
-     *            the toString to set
-     */
-    public void setToString(String pToString) {
-        toString = pToString;
-    }
-
-
-
-    /**
-     * @return the originValue
-     */
-    public Object getOriginValue() {
-        return originValue;
-    }
-
-
-
-    /**
-     * @param pOriginValue
-     *            the originValue to set
-     */
-    public void setOriginValue(Object pOriginValue) {
-        originValue = pOriginValue;
-    }
-
-
-
-    /**
-     * @return the beanRef
-     */
-    public BeanRef getBeanRef() {
-        return beanRef;
-    }
-
-
-
-    /**
-     * @param pBeanRef
-     *            the beanRef to set
-     */
-    public void setBeanRef(BeanRef pBeanRef) {
-        beanRef = pBeanRef;
-    }
-
-
-
-    /**
-     * @return the tip
-     */
     public String getTip() {
         return tip;
     }
 
-
-
-    /**
-     * @param pTip
-     *            the tip to set
-     */
-    public void setTip(String pTip) {
-        tip = pTip;
+    public ValueWrapper setTip(String tip) {
+        this.tip = tip;
+        return this;
     }
 
-
-
-    /**
-     * @return the value
-     */
     public Object getValue() {
         return value;
     }
 
-
-
-    /**
-     * @param pValue
-     *            the value to set
-     */
-    public void setValue(Object pValue) {
-        value = pValue;
+    public ValueWrapper setValue(Object value) {
+        this.value = value;
+        return this;
     }
 
-
-
-    /**
-     * @return the type
-     */
-    public String getType() {
-        return type;
+    public String getShowType() {
+        return showType;
     }
 
-
-
-    /**
-     * @param pType
-     *            the type to set
-     */
-    public void setType(String pType) {
-        type = pType;
+    public ValueWrapper setShowType(String showType) {
+        this.showType = showType;
+        return this;
     }
 
+    public Object getOriginValue() {
+        return originValue;
+    }
+
+    public ValueWrapper setOriginValue(Object originValue) {
+        this.originValue = originValue;
+        return this;
+    }
+
+    public BeanRef getBeanRef() {
+        return beanRef;
+    }
+
+    public ValueWrapper setBeanRef(BeanRef beanRef) {
+        this.beanRef = beanRef;
+        return this;
+    }
+
+    public String getToString() {
+        return toString;
+    }
+
+    public ValueWrapper setToString(String toString) {
+        this.toString = toString;
+        return this;
+    }
 }

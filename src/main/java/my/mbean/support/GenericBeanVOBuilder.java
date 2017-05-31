@@ -15,8 +15,11 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
 
+import javax.annotation.Resource;
+import javax.validation.constraints.Max;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -44,15 +47,15 @@ public class GenericBeanVOBuilder extends BeanVOBuilder<BeanVO> {
     /**
      * bean view page, properties view 中的属性显示的大小限制,比如数组最多显示30个.
      */
-    private Integer propertyValueLimitForArray = Integer.valueOf(30);
+    private Integer propertyValueLimitForArray      = Integer.valueOf(30);
     private Integer propertyValueLimitForCollection = Integer.valueOf(30);
-    private Integer propertyValueLimitForMap = Integer.valueOf(30);
+    private Integer propertyValueLimitForMap        = Integer.valueOf(30);
     /**
      * String format: beanName.propertyName
      */
-    private List<String> ignoreProperties;
-    @Autowired
-    protected BeansService beansService;
+    private   List<String>          ignoreProperties;
+    @Resource
+    protected BeansService          beansService;
     @Autowired
     protected PropertyAccessService propertyAccessService;
 
@@ -396,7 +399,6 @@ public class GenericBeanVOBuilder extends BeanVOBuilder<BeanVO> {
     protected Object populatePropertyValue(String pBeanName, PropertyDescriptor pPropertyDescriptor, ConfigurableApplicationContext pContext) {
         Object beanInstance = pContext.getBean(pBeanName);
         Object propInstance = propertyAccessService.getProperty(pPropertyDescriptor.getName(), beanInstance);
-        if (propInstance == null) return null;
         ValueWrapper valueWrapper = populateValueWrapper(propInstance);
         return valueWrapper;
     }
@@ -408,9 +410,6 @@ public class GenericBeanVOBuilder extends BeanVOBuilder<BeanVO> {
         // 如果是代理对的话 这里是得不到field的值的. 所以要得到Origin Instance.
         if (propInstance == null && AopUtils.isAopProxy(beanInstance)) {
             propInstance = Utils.getValue(pField, Utils.extractOriginInstance(beanInstance));
-        }
-        if (propInstance == null) {
-            return null;
         }
         ValueWrapper valueWrapper = populateValueWrapper(propInstance);
         return valueWrapper;
@@ -425,46 +424,48 @@ public class GenericBeanVOBuilder extends BeanVOBuilder<BeanVO> {
      */
     private ValueWrapper populateValueWrapper(Object pPropInstance) {
         ValueWrapper valueWrapper = new ValueWrapper();
+        if (pPropInstance == null) {
+            return valueWrapper.setToString("").setTip("origin value is null");
+        }
         Class<? extends Object> propType = pPropInstance.getClass();
         if (ClassUtils.isPrimitiveOrWrapper(propType) || String.class.isAssignableFrom(propType)) {
-            valueWrapper.setOriginValue(pPropInstance);
-            valueWrapper.setType(ValueWrapper.VALUE_TYPE_SIMPLE);
-            return valueWrapper;
+            return valueWrapper.setOriginValue(pPropInstance);
         }
-        // Class也可能是个bean?.
-        if ( Class.class.isAssignableFrom(propType)) {
-            valueWrapper.setToString(Utils.toString(pPropInstance));
-            return valueWrapper;
+        // 过虑掉一些不可能是bean的类型, 直接toString.
+        if (Class.class.isAssignableFrom(propType)) {
+            return valueWrapper.setToString(pPropInstance.toString());
+        }
+
+        // 数组, 如果是基本类型或是其包装类, 就全部显示
+        if (propType.isArray() && ClassUtils.isPrimitiveOrWrapper(propType.getComponentType())) {
+            int length = Array.getLength(pPropInstance);
+            if (length == 0) {
+                return valueWrapper.setToString("[]");
+            }
+            return valueWrapper.setToString(Utils.toString(pPropInstance));
         }
 
         // 先探测对象是否为一个bean reference 对象(指向一个容器中的bean对象)
         ValueWrapper.BeanRef beanRef = beansService.detectBeanRef(pPropInstance);
         if (beanRef.isRef()) {
-            valueWrapper.setBeanRef(beanRef);
-            return valueWrapper; // 如果是一个bean reference 就直接返回.
+            return valueWrapper.setBeanRef(beanRef); // 如果是一个bean reference 就直接返回.
         }
 
         // 如果对象是一个数组
-        if (propType.isArray() && !propType.getComponentType().isPrimitive()) {
+        if (propType.isArray() && !propType.getComponentType().isPrimitive()) { // 基本类型数组不能转换成 Object[]
             List<?> beanRefs = beansService.detectBeanRefs((Object[]) pPropInstance, getPropertyValueLimitForArray());
             if (Utils.isNotEmpty(beanRefs)) {
-                valueWrapper.setValue(beanRefs);
-                valueWrapper.setType(ValueWrapper.VALUE_TYPE_ARRAY);
-                return valueWrapper;
+                return valueWrapper.setValue(beanRefs).setShowType(ValueWrapper.VALUE_SHOW_TYPE_LIST);
             }
         } else if (Collection.class.isAssignableFrom(propType)) { // 如果对象是一个集合类型
             List<?> beanRefs = beansService.detectBeanRefs((Collection<?>) pPropInstance, getPropertyValueLimitForCollection());
             if (Utils.isNotEmpty(beanRefs)) {
-                valueWrapper.setValue(beanRefs);
-                valueWrapper.setType(ValueWrapper.VALUE_TYPE_LIST);
-                return valueWrapper;
+                return valueWrapper.setValue(beanRefs).setShowType(ValueWrapper.VALUE_SHOW_TYPE_LIST);
             }
         } else if (Map.class.isAssignableFrom(propType)) { // 如果对象是一个Map类型.
             List<?> beanRefs = beansService.detectBeanRefs((Map<Object, Object>) pPropInstance, getPropertyValueLimitForMap());
             if (Utils.isNotEmpty(beanRefs)) {
-                valueWrapper.setValue(beanRefs);
-                valueWrapper.setType(ValueWrapper.VALUE_TYPE_MAP);
-                return valueWrapper;
+                return valueWrapper.setValue(beanRefs).setShowType(ValueWrapper.VALUE_SHOW_TYPE_MAP);
             }
         }
         valueWrapper.setToString(beanRef.getToString());

@@ -34,163 +34,81 @@ public class BeanVO {
      */
     private Object extra;
 
-
-
     @Override
     public String toString() {
         return Utils.toString(this);
     }
 
 
-
-    /**
-     * @return the beanName
-     */
     public String getBeanName() {
         return beanName;
     }
 
+    public BeanVO setBeanName(String beanName) {
+        this.beanName = beanName;
+        return this;
+    }
 
-
-    /**
-     * @return the beanClass
-     */
     public String getBeanClass() {
         return beanClass;
     }
 
+    public BeanVO setBeanClass(String beanClass) {
+        this.beanClass = beanClass;
+        return this;
+    }
 
-
-    /**
-     * @return the beanValue
-     */
     public String getBeanValue() {
         return beanValue;
     }
 
-
-
-    /**
-     * @param pBeanName
-     *            the beanName to set
-     */
-    public void setBeanName(String pBeanName) {
-        beanName = pBeanName;
+    public BeanVO setBeanValue(String beanValue) {
+        this.beanValue = beanValue;
+        return this;
     }
 
-
-
-    /**
-     * @param pBeanClass
-     *            the beanClass to set
-     */
-    public void setBeanClass(String pBeanClass) {
-        beanClass = pBeanClass;
-    }
-
-
-
-    /**
-     * @param pBeanValue
-     *            the beanValue to set
-     */
-    public void setBeanValue(String pBeanValue) {
-        beanValue = pBeanValue;
-    }
-
-
-
-    /**
-     * @return the url
-     */
     public String getUrl() {
         return url;
     }
 
-
-
-    /**
-     * @param pUrl
-     *            the url to set
-     */
-    public void setUrl(String pUrl) {
-        url = pUrl;
+    public BeanVO setUrl(String url) {
+        this.url = url;
+        return this;
     }
 
-
-
-    /**
-     * @return the contextId
-     */
     public String getContextId() {
         return contextId;
     }
 
-
-
-    /**
-     * @param pContextId
-     *            the contextId to set
-     */
-    public void setContextId(String pContextId) {
-        contextId = pContextId;
+    public BeanVO setContextId(String contextId) {
+        this.contextId = contextId;
+        return this;
     }
 
-
-
-    /**
-     * @return the properties
-     */
     public Object getProperties() {
         return properties;
     }
 
+    public BeanVO setProperties(Object properties) {
+        this.properties = properties;
+        return this;
+    }
 
-
-    /**
-     * @return the methods
-     */
     public Object getMethods() {
         return methods;
     }
 
-
-
-    /**
-     * @param pProperties
-     *            the properties to set
-     */
-    public void setProperties(Object pProperties) {
-        properties = pProperties;
+    public BeanVO setMethods(Object methods) {
+        this.methods = methods;
+        return this;
     }
 
-
-
-    /**
-     * @param pMethods
-     *            the methods to set
-     */
-    public void setMethods(Object pMethods) {
-        methods = pMethods;
-    }
-
-
-
-    /**
-     * @return the extra
-     */
     public Object getExtra() {
         return extra;
     }
 
-
-
-    /**
-     * @param pExtra
-     *            the extra to set
-     */
-    public void setExtra(Object pExtra) {
-        extra = pExtra;
+    public BeanVO setExtra(Object extra) {
+        this.extra = extra;
+        return this;
     }
-
 }

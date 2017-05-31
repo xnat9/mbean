@@ -24,15 +24,15 @@ public class GenericPropertyVOBuilder extends GenericService implements Property
     /**
      * bean view page, properties view 中的属性显示的大小限制,比如数组最多显示30个.
      */
-    private Integer propertyValueLimitForArray = Integer.valueOf(100);
+    private Integer propertyValueLimitForArray      = Integer.valueOf(100);
     private Integer propertyValueLimitForCollection = Integer.valueOf(100);
-    private Integer propertyValueLimitForMap = Integer.valueOf(70);
-    @Autowired
-    private BeansService beansService;
+    private Integer propertyValueLimitForMap        = Integer.valueOf(70);
+    @Resource
+    private   BeansService          beansService;
     @Autowired
     protected PropertyAccessService propertyAccessService;
     @Resource
-    private MBeanConfiguration mBeanConfiguration;
+    private   MBeanConfiguration    mBeanConfiguration;
 
 
 
@@ -172,7 +172,6 @@ public class GenericPropertyVOBuilder extends GenericService implements Property
         Class<? extends Object> propType = pPropInstance.getClass();
         if (ClassUtils.isPrimitiveOrWrapper(propType) || String.class.isAssignableFrom(propType)) {
             valueWrapper.setOriginValue(pPropInstance);
-            valueWrapper.setType(ValueWrapper.VALUE_TYPE_SIMPLE);
             return valueWrapper;
         }
         // Class也可能是个bean?.
@@ -192,7 +191,7 @@ public class GenericPropertyVOBuilder extends GenericService implements Property
             List<?> beanRefs = beansService.detectBeanRefs((Object[]) pPropInstance, getPropertyValueLimitForArray());
             if (Utils.isNotEmpty(beanRefs)) {
                 valueWrapper.setValue(beanRefs);
-                valueWrapper.setType(ValueWrapper.VALUE_TYPE_ARRAY);
+                valueWrapper.setShowType(ValueWrapper.VALUE_SHOW_TYPE_LIST);
                 return valueWrapper;
             }
         }
@@ -200,7 +199,7 @@ public class GenericPropertyVOBuilder extends GenericService implements Property
             Collection<?> beanRefs = beansService.detectBeanRefs((Collection<?>) pPropInstance, getPropertyValueLimitForCollection());
             if (Utils.isNotEmpty(beanRefs)) {
                 valueWrapper.setValue(beanRefs);
-                valueWrapper.setType(ValueWrapper.VALUE_TYPE_LIST);
+                valueWrapper.setShowType(ValueWrapper.VALUE_SHOW_TYPE_LIST);
                 return valueWrapper;
             }
         }
@@ -208,7 +207,7 @@ public class GenericPropertyVOBuilder extends GenericService implements Property
             List<?> beanRefs = beansService.detectBeanRefs((Map<Object, Object>) pPropInstance, getPropertyValueLimitForMap());
             if (Utils.isNotEmpty(beanRefs)) {
                 valueWrapper.setValue(beanRefs);
-                valueWrapper.setType(ValueWrapper.VALUE_TYPE_MAP);
+                valueWrapper.setShowType(ValueWrapper.VALUE_SHOW_TYPE_MAP);
                 return valueWrapper;
             }
         }

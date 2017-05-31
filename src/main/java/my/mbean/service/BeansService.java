@@ -31,7 +31,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.util.*;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -370,48 +369,34 @@ public class BeansService extends GenericService {
 
 
     public List<?> detectBeanRefs(Collection<?> pCollection, int pLimit) {
-        if (Utils.isEmpty(pCollection)) return null;
+        if (Utils.isEmpty(pCollection)) return Collections.emptyList();
         if (pLimit < 0) {
-            log.debug("detectBeanRefInfo(): parameter pLimit < 0, so not dectect.");
-            return null;
+            log.warn("detectBeanRefs(): parameter pLimit < 0, so not dectect.");
+            return Collections.emptyList();
         }
         int limit = Math.min(pLimit, pCollection.size());
         List<Object> result = new ArrayList<>(limit);
         Iterator<?> it = pCollection.iterator();
         for (int i = 0; it.hasNext() && i < limit; i++) {
-            BeanRef beanRef;
-            Object v = it.next();
-            if (v == null) {
-                beanRef = new BeanRef("null");
-            } else {
-                beanRef = detectBeanRef(v);
-            }
-            result.add(beanRef);
+            result.add(detectBeanRef(it.next()));
         }
         if (pCollection.size() > pLimit) {
-            BeanRef beanRef = new BeanRef("Size: " + pCollection.size() + " ......");
-            result.add(beanRef);
+            result.add(new BeanRef("Size: " + pCollection.size() + " ......"));
         }
         return result;
     }
 
 
     public List<?> detectBeanRefs(Object[] pArrayValue, int pLimit) {
-        if (Utils.isEmpty(pArrayValue)) return null;
+        if (Utils.isEmpty(pArrayValue)) return Collections.emptyList();
         if (pLimit < 0) {
-            log.debug("detectBeanRefInfo(): parameter pLimit < 0, so not dectect.");
-            return null;
+            log.warn("detectBeanRefs(): parameter pLimit < 0, so not dectect.");
+            return Collections.emptyList();
         }
         int limit = Math.min(pLimit, pArrayValue.length);
         List<Object> result = new ArrayList<>(limit);
         for (int i = 0; i < limit; i++) {
-            BeanRef beanRef = null;
-            if (pArrayValue[i] == null) {
-                beanRef = new BeanRef("null");
-            } else {
-                beanRef = detectBeanRef(pArrayValue[i]);
-            }
-            result.add(beanRef);
+            result.add(detectBeanRef(pArrayValue[i]));
         }
         if (pArrayValue.length > pLimit) {
             BeanRef beanRef = new BeanRef("Length: " + pArrayValue.length + " ......");
@@ -422,36 +407,17 @@ public class BeansService extends GenericService {
 
 
     public List<?> detectBeanRefs(Map<Object, Object> pMapValue, int pLimit) {
-        if (Utils.isEmpty(pMapValue)) return null;
+        if (Utils.isEmpty(pMapValue)) return Collections.emptyList();
         if (pLimit < 0) {
-            log.debug("detectBeanRefInfo(): parameter pLimit < 0, so not dectect.");
-            return null;
+            log.warn("detectBeanRefs(): parameter pLimit < 0, so not dectect.");
+            return Collections.emptyList();
         }
         int limit = Math.min(pLimit, pMapValue.size());
         List<Object> result = new ArrayList<>(limit + 1);
-        // map 的key和value 都可能为null.
-        String nullStr = "null";
         Iterator<Entry<Object, Object>> it = pMapValue.entrySet().iterator();
         for (int i = 0; it.hasNext() && i < limit; i++) {
             Entry<Object, Object> entry = it.next();
-            Object key = entry.getKey();
-            Object value = entry.getValue();
-            BeanRef valueBeanRef = null;
-            BeanRef keyBeanRef = null;
-            if (key == null && value == null) {
-                valueBeanRef = new BeanRef(nullStr);
-                keyBeanRef = new BeanRef(nullStr);
-            } else if (key == null && value != null) {
-                keyBeanRef = new BeanRef(nullStr);
-                valueBeanRef = detectBeanRef(value);
-            } else if (key != null && value == null) {
-                keyBeanRef = detectBeanRef(key);
-                valueBeanRef = new BeanRef(nullStr);
-            } else if (key != null && value != null) {
-                keyBeanRef = detectBeanRef(key);
-                valueBeanRef = detectBeanRef(value);
-            }
-            result.add(new ValueWrapper.Entry(keyBeanRef, valueBeanRef));
+            result.add(new ValueWrapper.Entry(detectBeanRef(entry.getKey()), detectBeanRef(entry.getValue())));
         }
         if (pMapValue.size() > pLimit) {
             BeanRef keyBeanRef = new BeanRef("Size: " + pMapValue.size());
@@ -463,14 +429,14 @@ public class BeansService extends GenericService {
 
 
     public BeanRef detectBeanRef(Object pInstance) {
-        if (pInstance == null) return null;
         BeanRef beanRef = new BeanRef();
-        if (!isNeedDetectBeanInfo(pInstance.getClass())) {
-            beanRef.setToString(Utils.toString(pInstance));
-            return beanRef;
+        if (pInstance == null) return beanRef.setToString("null");
+        // 这里过虑掉不可能是bean的类型.
+        Class<?> type = pInstance.getClass();
+        if (!isBeanPossible(type)) {
+            return beanRef.setToString(Utils.toString(pInstance));
         }
         // TODO get from cache.
-        Class<?> type = pInstance.getClass();
         boolean found = false;
         for (Iterator<ConfigurableApplicationContext> it = getContextHierarchy().iterator(); !found && it.hasNext(); ) {
             ConfigurableApplicationContext context = it.next();
@@ -479,25 +445,26 @@ public class BeansService extends GenericService {
             for (Entry<String, ?> entry : beans.entrySet()) {
                 if (Objects.equals(pInstance, entry.getValue())) {
                     String beanName = entry.getKey();
-                    beanRef.setBeanName(beanName);
-                    beanRef.setBeanUrl(buildBeanUrl(beanName, context));
+                    beanRef.setBeanName(beanName).setBeanUrl(buildBeanUrl(beanName, context));
                     found = true;
                     break;
                 }
             }
         }
-        if (!found) {
-            beanRef.setToString(pInstance.toString());
-        }
-        return beanRef;
+        return (found ? beanRef : beanRef.setToString(Utils.toString(pInstance)));
     }
 
 
-    protected boolean isNeedDetectBeanInfo(Class<?> pType) {
+    /**
+     * 判断类型是否可能为一个bean.
+     * @param pType
+     * @return 如果pType可能是个bean的话, 就返回true.
+     */
+    protected boolean isBeanPossible(Class<?> pType) {
         if (pType == null
-                || ClassUtils.isPrimitiveOrWrapper(pType)
+                || ClassUtils.isPrimitiveWrapper(pType)
                 || String.class.isAssignableFrom(pType)
-                || (pType.isArray() && pType.getComponentType().isPrimitive())) {
+                || Class.class.isAssignableFrom(pType)) {
             return false;
         }
         return true;
