@@ -1,0 +1,14 @@
+<tr v-for="prop in properties">
+    <td :title="prop.source">
+        <ul v-if="prop.annotationMarks" class="list-unstyled">
+            <li v-for="mark in prop.annotationMarks">
+                <i>{{mark}}</i>
+            </li>
+        </ul>
+        <a :href="prop.url">{{prop.name}}</a>
+    </td>
+    <td>
+        <prop-value v-if="prop.value" :value="prop.value"/>
+    </td>
+    <td>{{prop.type}}</td>
+</tr>

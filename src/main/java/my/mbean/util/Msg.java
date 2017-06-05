@@ -15,7 +15,8 @@ public class Msg {
     /**
      * match string like "{0.name}".
      */
-    private static final Pattern paramPattern = Pattern.compile("\\{(([0-9]+).([\\w].+))\\}");
+//    private static final Pattern paramPattern = Pattern.compile("\\{(([0-9]+).([\\w].+))\\}");
+    private static final Pattern paramPattern = Pattern.compile("\\{(([0-9]+).([\\w]+))\\}");
 
 
 
