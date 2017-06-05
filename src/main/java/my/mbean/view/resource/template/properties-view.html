@@ -1,10 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>Properties View</h3>
+        </div>
+        <table class="table table-bordered table-condensed table-striped table-hover">
+            <thead>
+                <tr><th>Name</th><th>Value</th><th>Type</th></tr>
+            </thead>
+            <tbody>
+                <!--<tr is="prop-item" v-for="prop in properties" :prop="prop"/>-->
+                <tr v-for="prop in properties">
+                    <td :title="prop.source">
+                        <ul v-if="prop.annotationMarks" class="list-unstyled">
+                            <li v-for="mark in prop.annotationMarks">
+                                <i>{{mark}}</i>
+                            </li>
+                        </ul>
+                        <a :href="prop.url">{{prop.name}}</a>
+                    </td>
+                    <td>
+                        <prop-value v-if="prop.value" :value="prop.value" :prop="prop"/>
+                    </td>
+                    <td>{{prop.type}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr><td><total :total="properties.length"/></td></tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

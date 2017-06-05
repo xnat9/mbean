@@ -2,8 +2,6 @@ package my.mbean;
 
 import my.mbean.service.BeansService;
 import my.mbean.spring.condition.ConditionalOnClass;
-import my.mbean.support.ConfigurationBeanVOBuilder;
-import my.mbean.support.GenericBeanVOBuilder;
 import my.mbean.support.GenericPropertyVOBuilder;
 import my.mbean.util.log.LogSystem;
 import my.mbean.web.MBeanController;
@@ -139,30 +137,6 @@ public class AutoConfiguration {
 //        return webMvcConfigurer;
 //    }
 
-
-    @Bean
-    @Lazy
-    @Primary
-        // @ConfigurationProperties(prefix = CONFIG_PREFIX_ACTUATOR_ADMIN_BEANS +
-        // ".beanview.builder.default")
-        // @Scope(proxyMode=ScopedProxyMode.TARGET_CLASS)
-    GenericBeanVOBuilder defaultBeanVOBuilder() {
-        // default BeanVOBuilder.
-        return new GenericBeanVOBuilder() {
-        };
-    }
-
-
-//    @Bean
-//    @Lazy
-//    ConfigurationBeanVOBuilder configurationBeanVOBuilder(final ApplicationContext pContext) {
-//        return new ConfigurationBeanVOBuilder() {
-//            @Override
-//            public String[] getIds() {
-//                return pContext.getBeanNamesForAnnotation(Configuration.class);
-//            }
-//        };
-//    }
 
 
     @Bean

@@ -16,7 +16,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
 
 import javax.annotation.Resource;
-import javax.validation.constraints.Max;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
@@ -47,9 +46,8 @@ public class GenericBeanVOBuilder extends BeanVOBuilder<BeanVO> {
     /**
      * bean view page, properties view 中的属性显示的大小限制,比如数组最多显示30个.
      */
-    private Integer propertyValueLimitForArray      = Integer.valueOf(30);
-    private Integer propertyValueLimitForCollection = Integer.valueOf(30);
-    private Integer propertyValueLimitForMap        = Integer.valueOf(30);
+    private Integer propertyValueLimitForList = Integer.valueOf(30);
+    private Integer propertyValueLimitForMap  = Integer.valueOf(30);
     /**
      * String format: beanName.propertyName
      */
@@ -354,32 +352,9 @@ public class GenericBeanVOBuilder extends BeanVOBuilder<BeanVO> {
      * @return bean value.
      */
     protected String stringValueOfBean(String pBeanName, Object pBean) {
-        return toStringForBean(pBean, true);
+        return pBean.getClass().getName() + "@" + Integer.toHexString(hashCode());
     }
 
-
-    /**
-     * use Object.toString value of a beanInstance or self to String.
-     *
-     * @param pBean              bean instance.
-     * @param pUseObjectToString is or not use Object.toString.
-     * @return bean value of String.
-     */
-    protected String toStringForBean(Object pBean, boolean pUseObjectToString) {
-        if (pUseObjectToString) {
-            return useObjectToString(pBean);
-        } else {
-            return Objects.toString(pBean, null);
-        }
-    }
-
-
-    private String useObjectToString(Object pBean) {
-        if (pBean == null) return "null";
-        return new StringBuilder().append(pBean.getClass().getName())
-                .append("@")
-                .append(Integer.toHexString(pBean.hashCode())).toString();
-    }
 
 
     protected boolean isIgnoreAnnotation(Annotation pAnno) {
@@ -422,7 +397,7 @@ public class GenericBeanVOBuilder extends BeanVOBuilder<BeanVO> {
      * @param pPropInstance 属性的实例对象
      * @return ValueWrapper
      */
-    private ValueWrapper populateValueWrapper(Object pPropInstance) {
+    protected ValueWrapper populateValueWrapper(Object pPropInstance) {
         ValueWrapper valueWrapper = new ValueWrapper();
         if (pPropInstance == null) {
             return valueWrapper.setToString("").setTip("origin value is null");
@@ -453,19 +428,19 @@ public class GenericBeanVOBuilder extends BeanVOBuilder<BeanVO> {
 
         // 如果对象是一个数组
         if (propType.isArray() && !propType.getComponentType().isPrimitive()) { // 基本类型数组不能转换成 Object[]
-            List<?> beanRefs = beansService.detectBeanRefs((Object[]) pPropInstance, getPropertyValueLimitForArray());
+            List<?> beanRefs = beansService.detectBeanRefs((Object[]) pPropInstance, getPropertyValueLimitForList());
             if (Utils.isNotEmpty(beanRefs)) {
-                return valueWrapper.setValue(beanRefs).setShowType(ValueWrapper.VALUE_SHOW_TYPE_LIST);
+                return valueWrapper.setValue(beanRefs);
             }
         } else if (Collection.class.isAssignableFrom(propType)) { // 如果对象是一个集合类型
-            List<?> beanRefs = beansService.detectBeanRefs((Collection<?>) pPropInstance, getPropertyValueLimitForCollection());
+            List<?> beanRefs = beansService.detectBeanRefs((Collection<?>) pPropInstance, getPropertyValueLimitForList());
             if (Utils.isNotEmpty(beanRefs)) {
-                return valueWrapper.setValue(beanRefs).setShowType(ValueWrapper.VALUE_SHOW_TYPE_LIST);
+                return valueWrapper.setValue(beanRefs);
             }
         } else if (Map.class.isAssignableFrom(propType)) { // 如果对象是一个Map类型.
             List<?> beanRefs = beansService.detectBeanRefs((Map<Object, Object>) pPropInstance, getPropertyValueLimitForMap());
             if (Utils.isNotEmpty(beanRefs)) {
-                return valueWrapper.setValue(beanRefs).setShowType(ValueWrapper.VALUE_SHOW_TYPE_MAP);
+                return valueWrapper.setValue(beanRefs);
             }
         }
         valueWrapper.setToString(beanRef.getToString());
@@ -543,20 +518,7 @@ public class GenericBeanVOBuilder extends BeanVOBuilder<BeanVO> {
     }
 
 
-    /**
-     * @return the propertyValueLimitForArray
-     */
-    public Integer getPropertyValueLimitForArray() {
-        return propertyValueLimitForArray;
-    }
 
-
-    /**
-     * @return the propertyValueLimitForCollection
-     */
-    public Integer getPropertyValueLimitForCollection() {
-        return propertyValueLimitForCollection;
-    }
 
 
     /**
@@ -566,21 +528,6 @@ public class GenericBeanVOBuilder extends BeanVOBuilder<BeanVO> {
         return propertyValueLimitForMap;
     }
 
-
-    /**
-     * @param pPropertyValueLimitForArray the propertyValueLimitForArray to set
-     */
-    public void setPropertyValueLimitForArray(Integer pPropertyValueLimitForArray) {
-        propertyValueLimitForArray = pPropertyValueLimitForArray;
-    }
-
-
-    /**
-     * @param pPropertyValueLimitForCollection the propertyValueLimitForCollection to set
-     */
-    public void setPropertyValueLimitForCollection(Integer pPropertyValueLimitForCollection) {
-        propertyValueLimitForCollection = pPropertyValueLimitForCollection;
-    }
 
 
     /**
@@ -606,4 +553,13 @@ public class GenericBeanVOBuilder extends BeanVOBuilder<BeanVO> {
         ignoreProperties = pIgnoreProperties;
     }
 
+
+    public Integer getPropertyValueLimitForList() {
+        return propertyValueLimitForList;
+    }
+
+    public GenericBeanVOBuilder setPropertyValueLimitForList(Integer propertyValueLimitForList) {
+        this.propertyValueLimitForList = propertyValueLimitForList;
+        return this;
+    }
 }

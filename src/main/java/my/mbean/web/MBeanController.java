@@ -37,6 +37,7 @@ import static my.mbean.MBeanConfiguration.URL_BEAN_CHANGE;
 import static my.mbean.MBeanConfiguration.URL_BEAN_INVOKE;
 
 /**
+ * MBean Controller.
  * Created by xnat on 17/5/6.
  */
 public class MBeanController extends GenericService {

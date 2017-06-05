@@ -1,10 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>Bean View: ${beanName}</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="${staticUrlPrefix}/css/bootstrap.min.css"/>
+    <style type="text/css">
+        /* 表格内容垂直居中 */
+        td {
+            vertical-align: middle !important;
+            white-space: nowrap;
+        }
+    </style>
 </head>
 <body>
-$END$
+<div id="app">
+    <app :properties="properties" :methods="methods"/>
+</div>
+
+<!--  define template -->
+<script type="text/x-template" id="app-template">
+<div>
+    <div class="container">
+        <div class="well">
+            <p>Bean Name: <a href="${url}">${beanName}</a></p>
+            <p>Bean Class: <span>${beanClass}</span></p>
+            <p>Bean Value: <span>${beanValue}</span></p>
+        </div>
+    </div>
+    <!-- search area -->
+    <div class="container">
+    </div>
+    <!-- properties area -->
+    <properties-view :properties="properties" />
+    <!-- methods area -->
+    <methods-view :methods="methods"/>
+</div>
+</script>
+
+
+<!-- specific view -->
+<script type="text/x-template" id="property-value-converters-template">
+<div>
+    <ol>
+        <li v-for="item in value.value">
+            <ol v-if="item.toString.split(',').length > 1" class="list-unstyled">
+                <li v-for="i in item.toString.split(',')">{{i}}</li>
+            </ol>
+            <span v-else>{{item.toString}}</span>
+        </li>
+    </ol>
+</div>
+</script>
+
+
+<!-- import script resource -->
+<script src="${staticUrlPrefix}/js/vue.js"></script>
+<!-- <script src="${staticUrlPrefix}/js/vue.min.js"></script> -->
+<script src="${staticUrlPrefix}/js/jquery-3.1.1.min.js"></script>
+
+<script type="text/javascript">
+// initialize common variable.
+var staticUrlPrefix = "${staticUrlPrefix}";
+var initState = {
+    properties: ${properties},
+    methods: ${methods}
+};
+
+
+for (var i = 0, len = initState.properties.length; i < len; i++) {
+    var prop = initState.properties[i];
+    if (prop.name == 'converters') {
+        prop.specific = {componentName: 'property-value-converters'};
+    }
+}
+
+Vue.component('property-value-converters', {
+    props: ['value', 'prop'],
+    template: '#property-value-converters-template',
+//    render: function (createElement) {
+//        return createElement(
+//            'div',
+//            [
+//                createElement('ol', [
+//
+//                ])
+//            ]
+//        );
+//    },
+});
+</script>
+<script src="${staticUrlPrefix}/js/bean.js"></script>
 </body>
 </html>

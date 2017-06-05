@@ -35,70 +35,7 @@
     <methods-view :methods="methods"/>
 </div>
 </script>
-<script type="text/x-template" id="properties-view-template">
-<div class="container-fluid">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3>Properties View</h3>
-        </div>
-        <table class="table table-bordered table-condensed table-striped table-hover">
-            <thead>
-                <tr><th>Name</th><th>Value</th><th>Type</th></tr>
-            </thead>
-            <tbody>
-                <tr v-for="prop in properties">
-                    <td :title="prop.source">
-                        <ul v-if="prop.annotationMarks" class="list-unstyled">
-                            <li v-for="mark in prop.annotationMarks">
-                                <i>{{mark}}</i>
-                            </li>
-                        </ul>
-                        <a :href="prop.url">{{prop.name}}</a>
-                    </td>
-                    <td>
-                        <prop-value v-if="prop.value" :value="prop.value"/>
-                    </td>
-                    <td>{{prop.type}}</td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr><td><total :total="properties.length"/></td></tr>
-            </tfoot>
-        </table>
-    </div>
-</div>
-</script>
 
-<script type="text/x-template" id="methods-view-template">
-<div class="container-fluid" v-if="methods">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3>Methods View</h3>
-        </div>
-        <table class="table table-bordered table-condensed table-striped table-hover">
-            <thead>
-                <tr> <th>Name</th> <th>Return Type</th> <th>Declaring Class</th> </tr>
-            </thead>
-            <tbody>
-                <tr v-for="method in methods">
-                    <td>
-                        <ul v-if="method.annotationMarks && method.annotationMarks.length > 0" class="list-unstyled">
-                            <li v-for="mark in method.annotationMarks"><i>{{mark}}</i></li>
-                        </ul>
-                        <a v-if="method.callable" :href="method.url">{{method.name}}</a>
-                        <span v-else>{{method.name}}</span>
-                    </td>
-                    <td v-text="method.returnType" />
-                    <td v-text="method.declaringClass" />
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr> <td> <total :total="methods.length"/> </td> </tr>
-            </tfoot>
-        </table>
-    </div>
-</div>
-</script>
 
 <!-- import script resource -->
 <script src="${staticUrlPrefix}/js/vue.js"></script>

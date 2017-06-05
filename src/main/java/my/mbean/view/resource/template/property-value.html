@@ -1,6 +1,8 @@
 <div :title="value.hasOwnProperty('tip') ? value.tip : undefined">
+  <!-- 自定义属性值显示 -->
+  <div v-if="prop.hasOwnProperty('specific')" :is="prop.specific.componentName" :value="value" :prop="prop"/>
   <!-- map value-->
-  <ol v-if="value.value && value.showType == 'map'">
+  <ol v-else-if="value.value && value.showType == 'map'">
     <li v-for="entry in value.value">
       <div>
         <i>key:</i>

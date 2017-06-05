@@ -87,6 +87,9 @@ public class BeansService extends GenericService {
     }
 
 
+    /**
+     * my.mbean.support.BeanVOBuildersConfiguration.
+     */
     @SuppressWarnings("rawtypes")
     protected void initBeanVOBuidlers() {
         // initialize BeanVOBuilders.
@@ -124,7 +127,7 @@ public class BeansService extends GenericService {
         }
         BeanVOBuilder<?> BeanVOBuilder = findBeanVOBuilder(pBeanName);
         log.trace("buildBeanVO(): bean: {0} use builder: {1}", pBeanName, BeanVOBuilder);
-        Object beanVO = BeanVOBuilder.build(pBeanName, pContextId);
+        Object beanVO = BeanVOBuilder.build(pBeanName, (pContextId == null ? getApplicationContext().getId() : pContextId));
         log.debug("buildBeanVO(): beanName: {0}, beanVO: {1} ", beanVO);
         return beanVO;
     }
@@ -368,14 +371,14 @@ public class BeansService extends GenericService {
     }
 
 
-    public List<?> detectBeanRefs(Collection<?> pCollection, int pLimit) {
+    public List<BeanRef> detectBeanRefs(Collection<?> pCollection, int pLimit) {
         if (Utils.isEmpty(pCollection)) return Collections.emptyList();
         if (pLimit < 0) {
             log.warn("detectBeanRefs(): parameter pLimit < 0, so not dectect.");
             return Collections.emptyList();
         }
         int limit = Math.min(pLimit, pCollection.size());
-        List<Object> result = new ArrayList<>(limit);
+        List<BeanRef> result = new ArrayList<>(limit);
         Iterator<?> it = pCollection.iterator();
         for (int i = 0; it.hasNext() && i < limit; i++) {
             result.add(detectBeanRef(it.next()));
@@ -387,14 +390,14 @@ public class BeansService extends GenericService {
     }
 
 
-    public List<?> detectBeanRefs(Object[] pArrayValue, int pLimit) {
+    public List<BeanRef> detectBeanRefs(Object[] pArrayValue, int pLimit) {
         if (Utils.isEmpty(pArrayValue)) return Collections.emptyList();
         if (pLimit < 0) {
             log.warn("detectBeanRefs(): parameter pLimit < 0, so not dectect.");
             return Collections.emptyList();
         }
         int limit = Math.min(pLimit, pArrayValue.length);
-        List<Object> result = new ArrayList<>(limit);
+        List<BeanRef> result = new ArrayList<>(limit);
         for (int i = 0; i < limit; i++) {
             result.add(detectBeanRef(pArrayValue[i]));
         }

@@ -11,12 +11,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.core.env.StandardEnvironment;
-import org.springframework.util.ReflectionUtils;
 
 import javax.annotation.Resource;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -26,7 +24,7 @@ import java.util.TreeMap;
  * Created by xnat on 17/5/31.
  */
 @Configuration
-public class BeanVOBuildersConfigration {
+public class BeanVOBuildersConfiguration {
     @Resource
     private ApplicationContext context;
 
@@ -96,9 +94,12 @@ public class BeanVOBuildersConfigration {
                 if ("converters".equals(pField.getName())) {
                     final Object beanInstance = beansService.getBeanInstance(pBeanName, pContext);
                     final Object propInstance = Utils.getValue(pField, beanInstance);
-                    Method m = ReflectionUtils.findMethod(propInstance.getClass(), "getConverterStrings");
-                    Object ret = ReflectionUtils.invokeMethod(m, propInstance);
-                    return populateValueWrapper(ret);
+                    String[] lines = propInstance.toString().replace("ConversionService converters =\n", "").replace("\t", "").split("\n");
+                    List<ValueWrapper.BeanRef> beanRefs = beansService.detectBeanRefs(lines, 150);
+//                    for (ValueWrapper.BeanRef ref : beanRefs) {
+//                        ref.setToString(ref.getToString().replace(",", ",\n"));
+//                    }
+                    return new ValueWrapper().setValue(beanRefs);
                 }
                 return super.populatePropertyValue(pBeanName, pField, pContext);
             }

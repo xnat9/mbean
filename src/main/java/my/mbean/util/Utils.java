@@ -280,4 +280,17 @@ public class Utils {
     public static boolean isEmpty(final Map<?, ?> map) {
         return map == null || map.isEmpty();
     }
+
+
+    /**
+     * 判断集合里的元素的类型, 是否和给定的参数 cls匹配.
+     * @param coll
+     * @param cls
+     * @return
+     */
+    public static boolean matchComponentType(Collection coll, Class cls) {
+        if (isEmpty(coll)) return false;
+        if (coll instanceof List) return ((List) coll).get(0).getClass().equals(cls);
+        return coll.iterator().next().getClass().equals(cls);
+    }
 }

@@ -1,6 +1,10 @@
 package my.mbean.support;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import my.mbean.util.Utils;
 
@@ -9,9 +13,9 @@ import my.mbean.util.Utils;
  * @author hubert
  */
 public class ValueWrapper implements Serializable {
-    private static final long  serialVersionUID = 1L;
-    public static final String VALUE_SHOW_TYPE_MAP   = "map";
-    public static final String VALUE_SHOW_TYPE_LIST  = "list";
+    private static final long  serialVersionUID         = 1L;
+    protected static final String VALUE_SHOW_TYPE_MAP   = "map";
+    protected static final String VALUE_SHOW_TYPE_LIST  = "list";
     /**
      * value tip.
      */
@@ -165,6 +169,13 @@ public class ValueWrapper implements Serializable {
 
     public ValueWrapper setValue(Object value) {
         this.value = value;
+        if (value instanceof List) {
+            if (Utils.matchComponentType((List) value, BeanRef.class)) {
+                setShowType(VALUE_SHOW_TYPE_LIST);
+            } else if (Utils.matchComponentType((List) value, Entry.class)) {
+                setShowType(VALUE_SHOW_TYPE_MAP);
+            }
+        }
         return this;
     }
 
