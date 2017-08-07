@@ -3,6 +3,8 @@ package my.mbean;
 import my.mbean.util.Log;
 import my.mbean.web.MBeanServlet;
 import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.*;
@@ -26,7 +28,6 @@ public class MBeanServletRegistrar implements WebApplicationInitializer {
     public void onStartup(ServletContext pServletContext) throws ServletException {
         MBeanServlet mbeanServlet = new MBeanServlet();
         ServletRegistration.Dynamic registration = pServletContext.addServlet(MBEAN_SERVLET_NAME, mbeanServlet);
-//        MBeanConfiguration mBeanConfiguration = mBeanConfiguration();
 //        WebApplicationContext context = WebApplicationContextUtils.findWebApplicationContext(pServletContext);
 //        MBeanConfiguration mBeanConfiguration = context.getBean(MBeanConfiguration.class);
 //        if (mBeanConfiguration != null) {
@@ -37,14 +38,15 @@ public class MBeanServletRegistrar implements WebApplicationInitializer {
         registration.addMapping(MBeanConfiguration.MBEAN_URL_PREFIX + "/*");
 
 //         add filter.
-        FilterRegistration.Dynamic dynamic = pServletContext.addFilter("webRequestLoggingFilter", new OncePerRequestFilter() {
-            Log log = Log.of("webRequestLoggingFilter");
-            @Override
-            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-                log.info("trace request: uri: {0.requestURI}, method: {0.method}, remoteAddr: {0.remoteAddr}", request);
-                filterChain.doFilter(request, response);
-            }
-        });
-        dynamic.addMappingForUrlPatterns(ASYNC_DISPATCHER_TYPES, false, "/*");
+//        FilterRegistration.Dynamic dynamic = pServletContext.addFilter("webRequestLoggingFilter", new WebRequestLoggingFilter());
+//        dynamic.addMappingForUrlPatterns(ASYNC_DISPATCHER_TYPES, false, "/*");
+    }
+}
+class WebRequestLoggingFilter extends OncePerRequestFilter {
+    Log log = Log.of(getClass());
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        log.trace("WebRequestLoggingFilter: trace request: uri: {0.requestURI}, method: {0.method}, remoteAddr: {0.remoteAddr}", request);
+        filterChain.doFilter(request, response);
     }
 }

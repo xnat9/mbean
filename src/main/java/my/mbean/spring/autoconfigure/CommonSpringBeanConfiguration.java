@@ -33,7 +33,7 @@ public class CommonSpringBeanConfiguration {
             if (event.getProcessingTimeMillis() > 1500) {
                 logger.warn("long request: " + event.toString());
             } else {
-                logger.info(event.toString());
+                logger.debug(event.toString());
             }
         }
     }
