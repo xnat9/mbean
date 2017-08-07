@@ -29,116 +29,57 @@ public class MethodInfo {
     private List<String> annotationMarks;
 
 
-
-    /**
-     * @return the name
-     */
     public String getName() {
         return name;
     }
 
+    public MethodInfo setName(String name) {
+        this.name = name;
+        return this;
+    }
 
-
-    /**
-     * @return the returnType
-     */
     public String getReturnType() {
         return returnType;
     }
 
+    public MethodInfo setReturnType(String returnType) {
+        this.returnType = returnType;
+        return this;
+    }
 
-
-    /**
-     * @return the declaringClass
-     */
     public String getDeclaringClass() {
         return declaringClass;
     }
 
+    public MethodInfo setDeclaringClass(String declaringClass) {
+        this.declaringClass = declaringClass;
+        return this;
+    }
 
-
-    /**
-     * @return the url
-     */
     public String getUrl() {
         return url;
     }
 
+    public MethodInfo setUrl(String url) {
+        this.url = url;
+        return this;
+    }
 
-
-    /**
-     * @return the callable
-     */
     public boolean isCallable() {
         return callable;
     }
 
-
-
-    /**
-     * @param pName
-     *            the name to set
-     */
-    public void setName(String pName) {
-        name = pName;
+    public MethodInfo setCallable(boolean callable) {
+        this.callable = callable;
+        return this;
     }
 
-
-
-    /**
-     * @param pReturnType
-     *            the returnType to set
-     */
-    public void setReturnType(String pReturnType) {
-        returnType = pReturnType;
-    }
-
-
-
-    /**
-     * @param pDeclaringClass
-     *            the declaringClass to set
-     */
-    public void setDeclaringClass(String pDeclaringClass) {
-        declaringClass = pDeclaringClass;
-    }
-
-
-
-    /**
-     * @param pUrl
-     *            the url to set
-     */
-    public void setUrl(String pUrl) {
-        url = pUrl;
-    }
-
-
-
-    /**
-     * @param pCallable
-     *            the callable to set
-     */
-    public void setCallable(boolean pCallable) {
-        callable = pCallable;
-    }
-
-
-
-    /**
-     * @return the annotationMarks
-     */
     public List<String> getAnnotationMarks() {
         return annotationMarks;
     }
 
-
-
-    /**
-     * @param pAnnotationMarks
-     *            the annotationMarks to set
-     */
-    public void setAnnotationMarks(List<String> pAnnotationMarks) {
-        annotationMarks = pAnnotationMarks;
+    public MethodInfo setAnnotationMarks(List<String> annotationMarks) {
+        this.annotationMarks = annotationMarks;
+        return this;
     }
 }

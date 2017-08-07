@@ -50,212 +50,102 @@ public class PropertyVO {
     private Map<String, Object> extra;
 
 
-
-    /**
-     * @return the name
-     */
     public String getName() {
         return name;
     }
 
+    public PropertyVO setName(String name) {
+        this.name = name;
+        return this;
+    }
 
-
-    /**
-     * @return the type
-     */
     public String getType() {
         return type;
     }
 
+    public PropertyVO setType(String type) {
+        this.type = type;
+        return this;
+    }
 
-
-    /**
-     * @return the writable
-     */
     public boolean isWritable() {
         return writable;
     }
 
+    public PropertyVO setWritable(boolean writable) {
+        this.writable = writable;
+        return this;
+    }
 
-
-    /**
-     * @return the value
-     */
     public Object getValue() {
         return value;
     }
 
+    public PropertyVO setValue(Object value) {
+        this.value = value;
+        return this;
+    }
 
-
-    /**
-     * @return the contextId
-     */
     public String getContextId() {
         return contextId;
     }
 
+    public PropertyVO setContextId(String contextId) {
+        this.contextId = contextId;
+        return this;
+    }
 
-
-    /**
-     * @return the beanName
-     */
     public String getBeanName() {
         return beanName;
     }
 
+    public PropertyVO setBeanName(String beanName) {
+        this.beanName = beanName;
+        return this;
+    }
 
-
-    /**
-     * @return the beanClass
-     */
     public String getBeanClass() {
         return beanClass;
     }
 
+    public PropertyVO setBeanClass(String beanClass) {
+        this.beanClass = beanClass;
+        return this;
+    }
 
-
-    /**
-     * @return the beanUrl
-     */
     public String getBeanUrl() {
         return beanUrl;
     }
 
+    public PropertyVO setBeanUrl(String beanUrl) {
+        this.beanUrl = beanUrl;
+        return this;
+    }
 
-
-    /**
-     * @return the changeUrl
-     */
     public String getChangeUrl() {
         return changeUrl;
     }
 
-
-
-    /**
-     * @return the extra
-     */
-    public Map<String, Object> getExtra() {
-        return extra;
+    public PropertyVO setChangeUrl(String changeUrl) {
+        this.changeUrl = changeUrl;
+        return this;
     }
 
-
-
-    /**
-     * @param pName
-     *            the name to set
-     */
-    public void setName(String pName) {
-        name = pName;
-    }
-
-
-
-    /**
-     * @param pType
-     *            the type to set
-     */
-    public void setType(String pType) {
-        type = pType;
-    }
-
-
-
-    /**
-     * @param pWritable
-     *            the writable to set
-     */
-    public void setWritable(boolean pWritable) {
-        writable = pWritable;
-    }
-
-
-
-    /**
-     * @param pValue
-     *            the value to set
-     */
-    public void setValue(Object pValue) {
-        value = pValue;
-    }
-
-
-
-    /**
-     * @param pContextId
-     *            the contextId to set
-     */
-    public void setContextId(String pContextId) {
-        contextId = pContextId;
-    }
-
-
-
-    /**
-     * @param pBeanName
-     *            the beanName to set
-     */
-    public void setBeanName(String pBeanName) {
-        beanName = pBeanName;
-    }
-
-
-
-    /**
-     * @param pBeanClass
-     *            the beanClass to set
-     */
-    public void setBeanClass(String pBeanClass) {
-        beanClass = pBeanClass;
-    }
-
-
-
-    /**
-     * @param pBeanUrl
-     *            the beanUrl to set
-     */
-    public void setBeanUrl(String pBeanUrl) {
-        beanUrl = pBeanUrl;
-    }
-
-
-
-    /**
-     * @param pChangeUrl
-     *            the changeUrl to set
-     */
-    public void setChangeUrl(String pChangeUrl) {
-        changeUrl = pChangeUrl;
-    }
-
-
-
-    /**
-     * @param pExtra
-     *            the extra to set
-     */
-    public void setExtra(Map<String, Object> pExtra) {
-        extra = pExtra;
-    }
-
-
-
-    /**
-     * @return the source
-     */
     public PropertySource getSource() {
         return source;
     }
 
-
-
-    /**
-     * @param pSource
-     *            the source to set
-     */
-    public void setSource(PropertySource pSource) {
-        source = pSource;
+    public PropertyVO setSource(PropertySource source) {
+        this.source = source;
+        return this;
     }
 
+    public Map<String, Object> getExtra() {
+        return extra;
+    }
+
+    public PropertyVO setExtra(Map<String, Object> extra) {
+        this.extra = extra;
+        return this;
+    }
 }

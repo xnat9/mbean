@@ -30,7 +30,7 @@ public class CommonSpringBeanConfiguration {
     void postProcessRequest(ServletRequestHandledEvent event) {
         if (environment.getProperty("spring.request.monitor", boolean.class, true)) {
             Log logger = LogFactory.getLog(event.getSource().getClass());
-            if (event.getProcessingTimeMillis() > 1500) {
+            if (event.getProcessingTimeMillis() > 2000) {
                 logger.warn("long request: " + event.toString());
             } else {
                 logger.debug(event.toString());

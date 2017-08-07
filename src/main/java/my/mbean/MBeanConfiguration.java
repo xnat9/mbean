@@ -6,9 +6,9 @@ import my.mbean.web.MBeanController;
 import my.mbean.web.RequestDispatcher;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
-import org.springframework.util.StringValueResolver;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.UrlPathHelper;
 
@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * MBean's Configuration Class.
  * Created by xnat on 17/5/6.
  */
 public class MBeanConfiguration extends GenericService {
@@ -66,7 +67,22 @@ public class MBeanConfiguration extends GenericService {
         urlPathHelper = new UrlPathHelper();
         pathMatcher = new AntPathMatcher();
 
+        // init bean view map.
+        addBeanViewForType(GenericConversionService.class);
+    }
 
+
+    public void addBeanViewForType(Class cls) {
+        if (cls == null) return;
+        String[] beanNames = {};
+        if (cls.isAnnotation()) {
+            beanNames = getApplicationContext().getBeanNamesForAnnotation(cls);
+        } else {
+            beanNames = getApplicationContext().getBeanNamesForType(cls);
+        }
+        for (String beanName : beanNames) {
+            getBeanViewMap().put(beanName, "bean/" + cls.getSimpleName());
+        }
     }
 
     public RequestDispatcher getRequestDispatcher() {

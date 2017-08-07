@@ -1,7 +1,6 @@
 package my.mbean.util;
 
 import my.mbean.util.json.JsonUtil;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.springframework.aop.TargetClassAware;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
@@ -11,6 +10,8 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.PropertyPlaceholderHelper;
 import org.springframework.util.StringUtils;
 
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class Utils {
@@ -147,49 +149,57 @@ public class Utils {
 
 
     public static String toString(Object pObj) {
-        if (pObj == null)
-            return "null";
-        if (String.class.isAssignableFrom(pObj.getClass())) {
-            return (String) pObj;
+        if (pObj == null) return "null";
+        Class<? extends Object> type = pObj.getClass();
+        //常见类型toString.
+        if (ClassUtils.isPrimitiveOrWrapper(type)
+                || String.class.isAssignableFrom(type)
+                || Class.class.isAssignableFrom(type)
+                || Map.class.isAssignableFrom(type)
+                || Collection.class.isAssignableFrom(type)) {
+            return pObj.toString();
+        } else if (type.isArray()) {
+            if (double[].class.isAssignableFrom(type)) {
+                return Arrays.toString((double[]) pObj);
+            } else if (float[].class.isAssignableFrom(type)) {
+                return Arrays.toString((float[]) pObj);
+            } else if (boolean[].class.isAssignableFrom(type)) {
+                return Arrays.toString((boolean[]) pObj);
+            } else if (byte[].class.isAssignableFrom(type)) {
+                return Arrays.toString((byte[]) pObj);
+            } else if (char[].class.isAssignableFrom(type)) {
+                return Arrays.toString((char[]) pObj);
+            } else if (int[].class.isAssignableFrom(type)) {
+                return Arrays.toString((int[]) pObj);
+            } else if (long[].class.isAssignableFrom(type)) {
+                return Arrays.toString((long[]) pObj);
+            } else if (short[].class.isAssignableFrom(type)) {
+                return Arrays.toString((short[]) pObj);
+            } else {
+                return Arrays.toString((Object[]) pObj);
+            }
         }
-        if (ClassUtils.isPrimitiveOrWrapper(pObj.getClass())) {
-            return String.valueOf(pObj);
-        }
-        if (pObj instanceof Class) {
+        //extract java bean properties.
+        try {
+            StringBuilder sb = new StringBuilder("[");
+            PropertyDescriptor[] pds = Introspector.getBeanInfo(type).getPropertyDescriptors();
+            // 下面这种写法参考自Arrays.toString
+            int iMax = pds.length - 1;
+            if (iMax == -1) return "[]";
+            for (int i = 0; ; i++) {
+                Object v = null;
+                try {
+                    v = pds[i].getReadMethod().invoke(pObj);
+                } catch (Exception e) {
+                }
+                if (i == iMax) return sb.append(']').toString();
+                sb.append(pds[i].getName()).append("=").append(v).append(", ");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
             return pObj.toString();
         }
-        // if (pObj.getClass().isArray() &&
-        // pObj.getClass().getComponentType().isPrimitive()) {
-        // return
-        // }
-        return new ReflectionToStringBuilder(pObj) {
-            @Override
-            public String toString() {
-                // if (this.getObject() == null) {
-                // // return this.getStyle().getNullText();
-                // return "null";
-                // }
-                Class<?> clazz = getObject().getClass();
-                if (String.class.isAssignableFrom(clazz)) {
-                    return (String) getObject();
-                }
-                if (Collection.class.isAssignableFrom(clazz)) {
-                    append("size", ((Collection<?>) getObject()).size())
-                            .append(getObject().toString());
-                } else if (Map.class.isAssignableFrom(clazz)) {
-                    append("size", ((Map<?, ?>) getObject()).size())
-                            .append(getObject().toString());
-                } else {
-                    appendFieldsIn(clazz);
-                    while (clazz.getSuperclass() != null && clazz != getUpToClass()) {
-                        clazz = clazz.getSuperclass();
-                        appendFieldsIn(clazz);
-                    }
-                }
-                getStyle().appendEnd(getStringBuffer(), getObject());
-                return getStringBuffer().toString();
-            }
-        }.toString();
     }
 
     public static int toInt(final String str, final int defaultValue) {
@@ -269,5 +279,18 @@ public class Utils {
 
     public static boolean isEmpty(final Map<?, ?> map) {
         return map == null || map.isEmpty();
+    }
+
+
+    /**
+     * 判断集合里的元素的类型, 是否和给定的参数 cls匹配.
+     * @param coll
+     * @param cls
+     * @return
+     */
+    public static boolean matchComponentType(Collection coll, Class cls) {
+        if (isEmpty(coll)) return false;
+        if (coll instanceof List) return ((List) coll).get(0).getClass().equals(cls);
+        return coll.iterator().next().getClass().equals(cls);
     }
 }

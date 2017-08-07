@@ -55,106 +55,66 @@ public class PropertyInfo {
     }
 
 
-    /**
-     * @return the name
-     */
     public String getName() {
         return name;
     }
 
+    public PropertyInfo setName(String name) {
+        this.name = name;
+        return this;
+    }
 
-    /**
-     * @return the type
-     */
     public String getType() {
         return type;
     }
 
+    public PropertyInfo setType(String type) {
+        this.type = type;
+        return this;
+    }
 
-    /**
-     * @return the url
-     */
     public String getUrl() {
         return url;
     }
 
-
-    /**
-     * @param pName the name to set
-     */
-    public void setName(String pName) {
-        name = pName;
+    public PropertyInfo setUrl(String url) {
+        this.url = url;
+        return this;
     }
 
-
-    /**
-     * @param pType the type to set
-     */
-    public void setType(String pType) {
-        type = pType;
-    }
-
-
-    /**
-     * @param pUrl the url to set
-     */
-    public void setUrl(String pUrl) {
-        url = pUrl;
-    }
-
-
-    /**
-     * @return the value
-     */
     public Object getValue() {
         return value;
     }
 
-
-    /**
-     * @param pValue the value to set
-     */
-    public void setValue(Object pValue) {
-        value = pValue;
+    public PropertyInfo setValue(Object value) {
+        this.value = value;
+        return this;
     }
 
-
-    /**
-     * @return the source
-     */
-    public PropertySource getSource() {
-        return source;
-    }
-
-
-    /**
-     * @param pSource the source to set
-     */
-    public void setSource(PropertySource pSource) {
-        source = pSource;
-    }
-
-
-    /**
-     * @return the annotationMarks
-     */
     public List<String> getAnnotationMarks() {
         return annotationMarks;
     }
 
-
-    /**
-     * @param pAnnotationMarks the annotationMarks to set
-     */
-    public void setAnnotationMarks(List<String> pAnnotationMarks) {
-        annotationMarks = pAnnotationMarks;
+    public PropertyInfo setAnnotationMarks(List<String> annotationMarks) {
+        this.annotationMarks = annotationMarks;
+        return this;
     }
 
     public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public PropertyInfo setTags(List<String> tags) {
         this.tags = tags;
+        return this;
+    }
+
+    public PropertySource getSource() {
+        return source;
+    }
+
+    public PropertyInfo setSource(PropertySource source) {
+        this.source = source;
+        return this;
     }
 }
